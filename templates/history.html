@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+
+<!DOCTYPE html>
+{% load static %}
+<html>
+    {% block maincontent %}
+<head>
+    <title>Bootstrap 4 Sidebar Menu Responsive with Sub menu  Create Responsive Side Navigation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{% static 'css/samplefromstyle.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/tablestyle.css' %}">
+</head>
+<body>
+ 
+
+<!-- End vertical navbar -->
+
+
+
+
+<div class="page-content p-5" id="content">
+
+  <div class="sidebarCollapse">
+  <button id="sidebarCollapse" type="button" class="btn btn-light  rounded-pill shadow-sm px-4 "><i  class="fa fa-bars mr-2 toggleicon"></i><small class="text-uppercase font-weight-bold">Toggle</small></button>
+</div>
+  <h2 class="display-5 " style="margin-bottom: .9rem;">History Table</h2>
+  <div class="row ">
+    <div class="container">
+      <header>Uploading Form</header>
+      <form method="POST"  autocomplete="off"   enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form first">
+            <div class="details personal">
+                <!-- <span class="title">Filtering Details</span> -->
+
+                <div class="fields">
+                    <div class="input-field">
+                        <label>From Date</label>
+                        <input type="date" id="" name="from_date" placeholder="Enter From date" min="" required>
+                    </div>
+
+                    <div class="input-field">
+                        <label>To Date</label>
+                        <input type="date" id="" name="to_date" placeholder="Enter TO date" min="" required>
+                    </div>
+                    <div class="input-field">
+                        <label>Vechical NO</label>
+                        <select  name="vechical_no" >
+                            <option disabled hidden  selected>Select Vechical NO</option>
+                            {% for c in category %}
+                            <option value="{{ c }}">{{ c }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="details ID">
+                <button type="submit" class="nextBtn">
+                    <span class="btnText">Upload</span>
+                    <i class="uil uil-navigator"></i>
+                </button>
+            </div> 
+        </div>
+    </form>
+    <main class="table" id="customers_table">
+    
+        <section class="table__header">
+    
+            <div class="input-group">
+                <input  type="text" placeholder="Search Data...">
+                <img src="/static/images/search.png" alt="">
+            </div>
+            <div class="export__file">
+                <label for="export-file" class="export__file-btn" title="Export File"></label>
+                <input type="checkbox" id="export-file">
+                <div class="export__file-options">
+                    <label>Export As &nbsp; &#10140;</label>
+                    <label for="export-file" id="toPDF">PDF <img src="/static/images/pdf.png" alt=""></label>
+                    <label for="export-file" id="toJSON">JSON <img src="/static/images/json.png" alt=""></label>
+                    <label for="export-file" id="toCSV">CSV <img src="/static/images/csv.png" alt=""></label>
+                    <label for="export-file" id="toEXCEL">EXCEL <img src="/static/images/excel.png" alt=""></label>
+                </div>
+            </div>
+        </section>
+        <section class="table__body">
+            <table>
+                <thead>
+                    <tr>
+                        <th> bill_id <span class="icon-arrow">&UpArrow;</span></th>
+                        <th> vechical_no <span class="icon-arrow">&UpArrow;</span></th>
+                        <th> vechical_type <span class="icon-arrow">&UpArrow;</span></th>
+                        <th> fule_type <span class="icon-arrow">&UpArrow;</span></th>
+                        <th> driver_id <span class="icon-arrow">&UpArrow;</span></th>
+                        <th> buying_date <span class="icon-arrow">&UpArrow;</span></th>
+                        <th> overall_km <span class="icon-arrow">&UpArrow;</span></th>
+                        <th> reason <span class="icon-arrow">&UpArrow;</span></th>
+                        <th> fuel_amount <span class="icon-arrow">&UpArrow;</span></th>
+                        <th> route <span class="icon-arrow">&UpArrow;</span></th>
+                        <th> status <span class="icon-arrow">&UpArrow;</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in data%}
+                    <tr>
+                        <td>{{p.bill_id}} </td>
+                        <td>{{p.vechical_no}} </td>
+                        <td>{{p.vechical_type}} </td>
+                        <td>{{p.fule_type}} </td>
+                        <td>{{p.driver_id}} </td>
+                        <td>{{p.buying_date}} </td>
+                        <td>{{p.overall_km}} </td>
+                        <td>{{p.reason}} </td>
+                        <td>{{p.fuel_amount}} </td>
+                        <td>{{p.route}} </td>
+                        <td>{{p.status}} </td>
+                        
+                    </tr>
+                    {% endfor %}
+                    
+                </tbody>
+            </table>
+        </section>
+    </main>
+      </div>
+    </div>
+  
+</div> <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var fromDateInput = document.getElementById('fromdate');
+        var toDateInput = document.getElementById('todate');
+        console.log('----------------------sfromDateInput',fromDateInput)
+        // Get today's date in YYYY-MM-DD format
+        var today = new Date();
+        var day = String(today.getDate()).padStart(2, '0');
+        var month = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
+        var year = today.getFullYear();
+
+        today = year + '-' + month + '-' + day;
+
+        // Set the min attribute of the fromdate input to today's date
+        fromDateInput.setAttribute('min', today);
+
+        // Add event listener to fromdate input to update todate input min attribute
+        fromDateInput.addEventListener('change', function() {
+            var fromDate = fromDateInput.value;
+            toDateInput.setAttribute('min', fromDate);
+        });
+    });
+</script>
+<!-- End demo content -->
+{% endblock %}
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<script src="script.js"></script>
+
+</body>
+</html>
+
+

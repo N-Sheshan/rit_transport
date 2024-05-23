@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <title>Bootstrap 4 Sidebar Menu Responsive with Sub menu  Create Responsive Side Navigation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{% static 'css/samplefromstyle.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/popup.css' %}">
+</head>
+<body>
+ 
+  {% block maincontent %}
+
+
+<!-- Page content holder -->
+<div class="page-content p-5" id="content">
+  <!-- Toggle button -->
+  <div class="sidebarCollapse">
+  <button id="sidebarCollapse" type="button" class="btn btn-light  rounded-pill shadow-sm px-4 "><i  class="fa fa-bars mr-2 toggleicon"></i><small class="text-uppercase font-weight-bold">Toggle</small></button>
+</div>
+  <!-- Demo content -->
+  <h2 class="display-5 " style="margin-bottom: .9rem;">Data Uploading</h2>
+
+  <div class="row ">
+  <div class="container">
+    <header>Uploading Form</header>
+
+    <form method="POST" action="{% url 'data_update' %}" autocomplete="off"   enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form first">
+            <div class="details personal">
+                <!-- <span class="title">Filtering Details</span> -->
+
+                <div class="fields">
+                    <div class="availability-input-field">
+                        <label>Bill ID</label>
+                        <input name="bill_id" type="text" placeholder="Enter Bill ID" required>
+                    </div>
+                    <div class="availability-input-field">
+                      <label>Overall KM</label>
+                      <input name="overall_km" type="number" step="0.01" placeholder="Enter overall_km" required>
+                  </div>
+                </div>
+            </div>
+
+            <div class="details ID">
+                <button type="submit" class="nextBtn">
+                    <span class="btnText">Upload</span>
+                    <i class="uil uil-navigator"></i>
+                </button>
+            </div> 
+        </div>
+    </form>
+    <!-- {% if True %}
+        <div class="modal-box active">
+          <i class="fa-regular fa-circle-check"></i>
+          {% if success_message %}
+            <h2>Completed</h2>
+            <h3>{{ success_message }}</h3>
+          {% else %}
+            <h2>Error</h2>
+            <h3>{{ error_message }}</h3>
+          {% endif %}
+          <div class="buttons">
+            <button class="close-btn">Ok, Close</button>
+            <button>Open File</button>
+          </div>
+        </div>
+      {% endif %} -->
+</div>
+</div>
+
+
+</div>
+<!-- End demo content -->
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<!-- <script src="{% static '/js/script.js' %}"></script> -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const fileInput = document.getElementById('file');
+    const fileUploadLabel = document.getElementById('fileUploadLabel');
+    const filenameDisplay = document.getElementById('filename');
+
+    fileInput.addEventListener('change', function() {
+      if (fileInput.files.length > 0) {
+        filenameDisplay.textContent = 'Selected file: ' + fileInput.files[0].name;
+      } else {
+        filenameDisplay.textContent = '';
+      }
+    });
+  });
+
+  const section = document.querySelector("section"),
+    overlay = document.querySelector(".overlay"),
+    closeBtn = document.querySelector(".close-btn");
+
+  overlay.addEventListener("click", () => section.classList.remove("active"));
+  closeBtn.addEventListener("click", () => section.classList.remove("active"));
+  </script>
+{% endblock %}
+</body>
+</html>
+
+
