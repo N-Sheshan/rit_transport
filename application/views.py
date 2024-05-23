@@ -85,3 +85,90 @@ def history(request):
             return render(request, 'history.html', {'data': filtered_transport_approvals,"category":category})
     
     return render(request, "history.html",{"category":category})
+
+    # views.py
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+
+def generate_pdf(request):
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="bill.pdf"'
+
+    p = canvas.Canvas(response, pagesize=letter)
+    width, height = letter
+    # transport_approval = get_object_or_404(transport_approval, bill_id=bill_id)
+
+    # Title
+    p.setFont("Helvetica-Bold", 12)
+    p.drawString(150, height - 50, "P.A.C.R. SETHURAMAMMAL CHARITY TRUST")
+    p.setFont("Helvetica", 10)
+    p.drawString(210, height - 70, "BPCL, DEALERS @ 236463")
+    p.drawString(150, height - 85, "P.A.C. RAMASAMY RAJASALAI, RAJAPALAYAM.")
+
+    # Bill Number and Date
+    p.setFont("Helvetica-Bold", 10)
+    p.drawString(100, height - 30, "To:")
+    p.setFont("Helvetica-Bold", 10)
+    p.drawString(400, height - 30, "No:")
+    p.setFont("Helvetica", 10)
+    # p.drawString(430, height - 30, transport_approval.bill_id )
+
+    p.setFont("Helvetica-Bold", 10)
+    p.drawString(400, height - 110, "Date:")
+    p.setFont("Helvetica", 10)
+    # p.drawString(430, height - 110, transport_approval.buying_date)
+
+    # Car Details
+    p.setFont("Helvetica-Bold", 10)
+    p.drawString(100, height - 110, "Please Supply for Car No:")
+    p.setFont("Helvetica", 10)
+    # p.drawString(230, height - 110, transport_approval.vechical_no)
+
+    # Items
+    p.setFont("Helvetica-Bold", 10)
+    p.drawString(100, height - 140, "Fuel Type")
+    # p.drawString(250, height - 140, transport_approval.fule_type)
+    p.drawString(350, height - 140, "")
+
+    p.drawString(100, height - 160, "Amount")
+    # p.drawString(250, height - 160, transport_approval.fuel_amount)
+
+    p.drawString(100, height - 180, "Speed Petrol")
+    p.drawString(250, height - 180, "Litres")
+    p.drawString(350, height - 180, "")
+
+    p.drawString(100, height - 200, "Engine Oil")
+    p.drawString(250, height - 200, "K.G.")
+    p.drawString(350, height - 200, "")
+
+    p.drawString(100, height - 220, "Grease")
+    p.drawString(250, height - 220, "K.G.")
+    p.drawString(350, height - 220, "")
+
+    p.drawString(100, height - 240, "Distilled Water")
+    p.drawString(250, height - 240, "Bottles")
+    p.drawString(350, height - 240, "")
+
+    # Signature and Address
+    p.setFont("Helvetica-Bold", 10)
+    p.drawString(100, height - 280, "Signature")
+    p.line(200, 785, 250, 785)
+
+    p.setFont("Helvetica-Bold", 10)
+    p.drawString(100, height - 300, "Address")
+    p.setFont("Helvetica", 10)
+    p.drawString(200, height - 300, "Transport Incharge")
+    p.line(200, 805, 250, 805)
+
+    # Seal (simulated by drawing an ellipse and text)
+    p.setFont("Helvetica-Bold", 10)
+    p.drawString(350, height - 270, "R.I.T.")
+    p.ellipse(330, height - 290, 420, height - 250)
+
+    p.showPage()
+    p.save()
+
+    return response
+

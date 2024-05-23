@@ -14,7 +14,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
+from django.contrib import admin #type:ignore
 from django.urls import path
 from application import views
 
@@ -23,4 +23,5 @@ urlpatterns = [
     path('', views.fuel_application, name="fuel_application"),
     path('data_update', views.data_update, name="data_update"),
     path('history', views.history, name="history"),
+    path('generate_pdf',views.generate_pdf, name='generate_pdf'),
 ]
