@@ -38,22 +38,49 @@ def data_update(request):
     if request.method == 'POST':
         # Retrieve the existing instance based on bill_id from the POST data
         bill_id = request.POST.get('bill_id')
-        book = get_object_or_404(transport_approval, bill_id=bill_id)
-
-        # Create the form with the existing instance
-        form = KM_update(request.POST, instance=book)
-        
-        if form.is_valid():
-            form.save()
-            return render(request, "data_upload.html", {'form': form})
+        km =  request.POST.get('starting_KM')
+        # Get the latest instance matching the bill_id
+        vechical_filter = get_object_or_404(transport_approval, bill_id=bill_id)
+        vechical_no = vechical_filter.vechical_no
+        date = vechical_filter.buying_date
+        print('+++++++++++++++++',vechical_no)
+        vechical_list = transport_approval.objects.filter(vechical_no=vechical_no, buying_date__lte=date).order_by('buying_date')
+        for s in vechical_list:
+            print('#######',s.bill_id,'->',s.buying_date)
+        # Ensure the list has at least two items
+        form = KM_update(request.POST, instance=vechical_filter)
+        if len(vechical_list) < 2:
+            if form.is_valid():
+                form.save()
+                return render(request, "data_upload.html", {'form': form})
+            else:
+                print(form.errors)
+                return render(request, "error.html", {'form': form})
+            return render(request, "error.html", {'error': 'Not enough records to update the second last entry.'})
         else:
-            # Print form errors for debugging
-            print(form.errors)
-            return render(request, "error.html", {'form': form})
+            book = vechical_list.reverse()[1]
+            print('---------------------------')
+            print(f"Bill ID: {book.bill_id}")
+            print(f"Vehicle NO: {book.vechical_no}")
+            print(f"Buying Date: {book.buying_date}")
+            print('--------------------------- km type and starting_KM', type(km) , type(book.starting_KM) )
+            # Check if book.starting_KM is not None before converting to float
+            if book.starting_KM is not None:
+                book.Ending_KM = km
+                book.Mileage = (float(km)-float(book.starting_KM))/book.fuel_quantity
+                book.save()
+                form.save()
+                print('--------------------------- km type and starting_KM', type(float(km)) , type(float(book.starting_KM)) )
+                print(f"Ending_KM: {book.Ending_KM}")
+                print(f"Mileage: {book.Mileage}")
+            else:
+                print("Error: Starting KM is None.")
+        # Get the second-to-last item in the queryset
     else:
         form = KM_update()
     
     return render(request, "data_upload.html", {'form': form})
+
 
 
 def history(request):
