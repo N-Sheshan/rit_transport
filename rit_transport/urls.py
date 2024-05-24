@@ -24,4 +24,5 @@ urlpatterns = [
     path('data_update', views.data_update, name="data_update"),
     path('history', views.history, name="history"),
     path('generate_pdf',views.generate_pdf, name='generate_pdf'),
+    path('export_to_excel',views.export_to_excel, name='export_to_excel'),
 ]

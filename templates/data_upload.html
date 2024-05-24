@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="{% static 'css/samplefromstyle.css' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <link rel="stylesheet" href="{% static 'css/popup.css' %}">
+    <!-- <link rel="stylesheet" href="{% static 'css/popup.css' %}"> -->
 </head>
 <body>
  
@@ -21,7 +21,7 @@
 <div class="page-content p-5" id="content">
   <!-- Toggle button -->
   <div class="sidebarCollapse">
-  <button id="sidebarCollapse" type="button" class="btn btn-light  rounded-pill shadow-sm px-4 "><i  class="fa fa-bars mr-2 toggleicon"></i><small class="text-uppercase font-weight-bold">Toggle</small></button>
+  <button id="sidebarCollapse" type="button" class="btn btn-light  rounded-pill shadow-sm px-4 "><i  class="fa fa-bars mr-2 toggleicon"></i><small class="text-uppercase font-weight-bold">Menu</small></button>
 </div>
   <!-- Demo content -->
   <h2 class="display-5 " style="margin-bottom: .9rem;">Data Uploading</h2>
@@ -56,28 +56,39 @@
             </div> 
         </div>
     </form>
-    <!-- {% if True %}
-        <div class="modal-box active">
-          <i class="fa-regular fa-circle-check"></i>
-          {% if success_message %}
-            <h2>Completed</h2>
-            <h3>{{ success_message }}</h3>
-          {% else %}
-            <h2>Error</h2>
-            <h3>{{ error_message }}</h3>
-          {% endif %}
-          <div class="buttons">
-            <button class="close-btn">Ok, Close</button>
-            <button>Open File</button>
-          </div>
-        </div>
-      {% endif %} -->
+   
 </div>
 </div>
+</div>
+{% if success %}
+<div id="popup" class="popup">
+  <h2>Success!</h2>
+  <p>{{ success }}</p>
+  <button id="close-btn">OK</button>
+</div>
+{% endif %}
 
-
+{% if error_message %}
+<div id="popup" class="popup">
+  <h2>Error</h2>
+  <p>{{ error_message }}</p>
+  <button id="close-btn">OK</button>
 </div>
-<!-- End demo content -->
+{% endif %}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const popup = document.getElementById('popup');
+    const closeBtn = document.getElementById('close-btn');
+
+    if (popup) {
+      popup.style.display = 'block';
+      closeBtn.addEventListener('click', function() {
+        popup.style.display = 'none';
+      });
+    }
+  });
+</script>->
 
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -99,13 +110,15 @@
     });
   });
 
-  const section = document.querySelector("section"),
-    overlay = document.querySelector(".overlay"),
-    closeBtn = document.querySelector(".close-btn");
+  // const section = document.querySelector("section"),
+  //   overlay = document.querySelector(".overlay"),
+  //   closeBtn = document.querySelector(".close-btn");
 
-  overlay.addEventListener("click", () => section.classList.remove("active"));
-  closeBtn.addEventListener("click", () => section.classList.remove("active"));
-  </script>
+  // overlay.addEventListener("click", () => section.classList.remove("active"));
+  // closeBtn.addEventListener("click", () => section.classList.remove("active"));
+
+
+ </script>
 {% endblock %}
 </body>
 </html>

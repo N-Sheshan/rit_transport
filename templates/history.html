@@ -12,7 +12,15 @@
     <link rel="stylesheet" href="{% static 'css/samplefromstyle.css' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/tablestyle.css' %}">
-</head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
+<script type="text/javascript" src="js/script.js"></script>
 <body>
  
 
@@ -22,113 +30,109 @@
 
 
 <div class="page-content p-5" id="content">
-
-  <div class="sidebarCollapse">
-  <button id="sidebarCollapse" type="button" class="btn btn-light  rounded-pill shadow-sm px-4 "><i  class="fa fa-bars mr-2 toggleicon"></i><small class="text-uppercase font-weight-bold">Toggle</small></button>
-</div>
-  <h2 class="display-5 " style="margin-bottom: .9rem;">History Table</h2>
-  <div class="row ">
-    <div class="container">
-      <header>Uploading Form</header>
-      <form method="POST"  autocomplete="off"   enctype="multipart/form-data">
-        {% csrf_token %}
-        <div class="form first">
-            <div class="details personal">
-                <!-- <span class="title">Filtering Details</span> -->
-
-                <div class="fields">
-                    <div class="input-field">
-                        <label>From Date</label>
-                        <input type="date" id="" name="from_date" placeholder="Enter From date" min="" required>
-                    </div>
-
-                    <div class="input-field">
-                        <label>To Date</label>
-                        <input type="date" id="" name="to_date" placeholder="Enter TO date" min="" required>
-                    </div>
-                    <div class="input-field">
-                        <label>Vechical NO</label>
-                        <select  name="vechical_no" >
-                            <option disabled hidden  selected>Select Vechical NO</option>
-                            {% for c in category %}
-                            <option value="{{ c }}">{{ c }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <div class="details ID">
-                <button type="submit" class="nextBtn">
-                    <span class="btnText">Upload</span>
-                    <i class="uil uil-navigator"></i>
-                </button>
-            </div> 
-        </div>
-    </form>
-    <main class="table" id="customers_table">
-    
-        <section class="table__header">
-    
-            <div class="input-group">
-                <input  type="text" placeholder="Search Data...">
-                <img src="/static/images/search.png" alt="">
-            </div>
-            <div class="export__file">
-                <label for="export-file" class="export__file-btn" title="Export File"></label>
-                <input type="checkbox" id="export-file">
-                <div class="export__file-options">
-                    <label>Export As &nbsp; &#10140;</label>
-                    <label for="export-file" id="toPDF">PDF <img src="/static/images/pdf.png" alt=""></label>
-                    <label for="export-file" id="toJSON">JSON <img src="/static/images/json.png" alt=""></label>
-                    <label for="export-file" id="toCSV">CSV <img src="/static/images/csv.png" alt=""></label>
-                    <label for="export-file" id="toEXCEL">EXCEL <img src="/static/images/excel.png" alt=""></label>
-                </div>
-            </div>
-        </section>
-        <section class="table__body">
-            <table>
-                <thead>
-                    <tr>
-                        <th> bill_id <span class="icon-arrow">&UpArrow;</span></th>
-                        <th> vechical_no <span class="icon-arrow">&UpArrow;</span></th>
-                        <th> vechical_type <span class="icon-arrow">&UpArrow;</span></th>
-                        <th> fule_type <span class="icon-arrow">&UpArrow;</span></th>
-                        <th> driver_id <span class="icon-arrow">&UpArrow;</span></th>
-                        <th> buying_date <span class="icon-arrow">&UpArrow;</span></th>
-                        <th> overall_km <span class="icon-arrow">&UpArrow;</span></th>
-                        <th> reason <span class="icon-arrow">&UpArrow;</span></th>
-                        <th> fuel_amount <span class="icon-arrow">&UpArrow;</span></th>
-                        <th> route <span class="icon-arrow">&UpArrow;</span></th>
-                        <th> status <span class="icon-arrow">&UpArrow;</span></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for p in data%}
-                    <tr>
-                        <td>{{p.bill_id}} </td>
-                        <td>{{p.vechical_no}} </td>
-                        <td>{{p.vechical_type}} </td>
-                        <td>{{p.fule_type}} </td>
-                        <td>{{p.driver_id}} </td>
-                        <td>{{p.buying_date}} </td>
-                        <td>{{p.overall_km}} </td>
-                        <td>{{p.reason}} </td>
-                        <td>{{p.fuel_amount}} </td>
-                        <td>{{p.route}} </td>
-                        <td>{{p.status}} </td>
-                        
-                    </tr>
-                    {% endfor %}
-                    
-                </tbody>
-            </table>
-        </section>
-    </main>
-      </div>
+    <div class="sidebarCollapse">
+        <button id="sidebarCollapse" type="button" class="btn btn-light  rounded-pill shadow-sm px-4 ">
+            <i class="fa fa-bars mr-2 toggleicon"></i><small class="text-uppercase font-weight-bold">Menu</small>
+        </button>
     </div>
-  
-</div> <script>
+    <h2 class="display-5" style="margin-bottom: .9rem;">History Table</h2>
+    <div class="row ">
+        <div class="container table_container">
+            <header>Uploading Form</header>
+            <form method="POST" autocomplete="off" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form first">
+                    <div class="details personal">
+                        <div class="fields">
+                            <div class="input-field">
+                                <label>From Date</label>
+                                <input type="date" id="" name="from_date" placeholder="Enter From date" min="" required>
+                            </div>
+                            <div class="input-field">
+                                <label>To Date</label>
+                                <input type="date" id="" name="to_date" placeholder="Enter TO date" min="" required>
+                            </div>
+                            <div class="input-field">
+                                <label>Vehicle NO</label>
+                                <select name="vehicle_no">
+                                    <option disabled hidden selected>Select vehicle NO</option>
+                                    {% for c in category %}
+                                    <option value="{{ c.vehicle_no }}">{{ c.vehicle_no }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="details ID">
+                        <button type="submit" class="nextBtn">
+                            <span class="btnText">Upload</span>
+                            <i class="uil uil-navigator"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <main class="table" id="customers_table">
+                <section class="table__header">
+                    <div class="input-group">
+                        <input type="text" placeholder="Search Data...">
+                        <img src="/static/images/search.png" alt="">
+                    </div>
+                    <div class="export__file">
+                        <label for="export-file" class="export__file-btn" title="Export File"></label>
+                        <input type="checkbox" id="export-file">
+                        <div class="export__file-options">
+                            <label>Export As &nbsp; &#10140;</label>
+                            <a href="?download=excel" class="btn btn-primary" id="exportExcel">Export Excel</a>
+                            <a href="?download=pdf" class="btn btn-primary" id="exportPdf">Export PDF</a>
+                        </div>
+                    </div>
+                </section>
+                <section class="table__body">
+                    <table id="example" class="display nowrap" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Bill ID</th>
+                                <th>Vehicle No</th>
+                                <th>Driver ID</th>
+                                <th>Vehicle Type</th>
+                                <th>Fuel Type</th>
+                                <th>Buying Date</th>
+                                <th>Reason</th>
+                                <th>Fuel Quantity</th>
+                                <th>Route</th>
+                                <th>Starting KM</th>
+                                <th>Ending KM</th>
+                                <th>Mileage</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in data %}
+                            <tr>
+                                <td>{{ item.bill_id }}</td>
+                                <td>{{ item.vehicle_no }}</td>
+                                <td>{{ item.driver_id }}</td>
+                                <td>{{ item.vehicle_type }}</td>
+                                <td>{{ item.fuel_type }}</td>
+                                <td>{{ item.buying_date }}</td>
+                                <td>{{ item.reason }}</td>
+                                <td>{{ item.fuel_quantity }}</td>
+                                <td>{{ item.route }}</td>
+                                <td>{{ item.starting_KM }}</td>
+                                <td>{{ item.Ending_KM }}</td>
+                                <td>{{ item.Mileage }}</td>
+                                <td>{{ item.status }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </section>
+            </main>
+        </div>
+    </div>
+</div>
+ <script>
     document.addEventListener('DOMContentLoaded', function() {
         var fromDateInput = document.getElementById('fromdate');
         var toDateInput = document.getElementById('todate');
@@ -150,7 +154,16 @@
             toDateInput.setAttribute('min', fromDate);
         });
     });
-</script>
+
+    $(document).ready(function() {
+        $('#example').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ]
+        });
+    });
+    </script>
 <!-- End demo content -->
 {% endblock %}
 

@@ -19,7 +19,7 @@
 <div class="page-content p-5 " id="content">
   <!-- Toggle button -->
   <div class="sidebarCollapse ">
-  <button id="sidebarCollapse" type="button" class="btn btn-light  rounded-pill shadow-sm px-4 "><i  class="fa fa-bars mr-2 toggleicon"></i><small class="text-uppercase font-weight-bold">Toggle</small></button>
+  <button id="sidebarCollapse" type="button" class="btn btn-light  rounded-pill shadow-sm px-4 "><i  class="fa fa-bars mr-2 toggleicon"></i><small class="text-uppercase font-weight-bold">Menu</small></button>
 </div>
   <!-- Demo content -->
   <h2 class="display-5 "style="margin-bottom: .9rem;">Fuel Application From</h2>
@@ -38,11 +38,11 @@
                 <div class="fields">
                     
                     <div class="input-field">
-                        <label>Vechical NO</label>
-                        <select  name="vechical_no" required>
-                            <option disabled hidden  selected>Select Vechical NO</option>
+                        <label>vehicle NO</label>
+                        <select  name="vehicle_no" required>
+                            <option disabled hidden  selected>Select vehicle NO</option>
                             {% for c in category %}
-                            <option value="{{ c }}">{{ c }}</option>
+                            <option value="{{ c.vehicle_no }}">{{ c.vehicle_no }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -86,7 +86,27 @@
 </div>
 </div>
 </div>
+{% if success %}
+<div id="popup" class="popup">
+  <h2>Thank You!</h2>
+  <p>{{ success }}</p>
+  <button id="close-btn">OK</button>
+</div>
+{% endif %}
+
+{% if error_message %}
+<div id="popup" class="popup">
+  <h2>Error</h2>
+  <p>{{ error_message }}</p>
+  <button id="close-btn">OK</button>
+</div>
+{% endif %}
+
 <script>
+    window.open("{% url 'generate_pdf' %}", "_blank");
+</script>
+<script>
+    
     document.addEventListener('DOMContentLoaded', function() {
         var fromDateInput = document.getElementById('fromdate');
         var toDateInput = document.getElementById('todate');
@@ -101,6 +121,7 @@
 
         // Set the min attribute of the fromdate input to today's date
         fromDateInput.setAttribute('min', today);
+        fromDateInput.setAttribute('max', today);
 
         // Add event listener to fromdate input to update todate input min attribute
         fromDateInput.addEventListener('change', function() {
@@ -108,6 +129,19 @@
             toDateInput.setAttribute('min', fromDate);
         });
     });
+     // Get the "Bill It" button
+    
+     document.addEventListener('DOMContentLoaded', function() {
+    const popup = document.getElementById('popup');
+    const closeBtn = document.getElementById('close-btn');
+
+    if (popup) {
+      popup.style.display = 'block';
+      closeBtn.addEventListener('click', function() {
+        popup.style.display = 'none';
+      });
+    }
+  });
 </script>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
