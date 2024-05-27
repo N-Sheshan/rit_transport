@@ -13,9 +13,15 @@ class transport_approval(models.Model):
     reason=models.CharField(max_length=500,blank=True,null=True)
     fuel_quantity = models.IntegerField(blank=True,null=True)
     route = models.CharField(max_length=200,blank=True,null=True)
+    engine_oil_quantity = models.CharField(max_length=200,blank=True,null=True)
+    grease_company = models.CharField(max_length=200,blank=True,null=True)
+    grease_quantity = models.CharField(max_length=200,blank=True,null=True)
+    distilled_water_quantity = models.CharField(max_length=50,blank=True,null=True)
     status = models.CharField(max_length=50,blank=True,null=True)
     Mileage = models.CharField(max_length=50,blank=True,null=True)
+    pdf_generated_proof = models.CharField(max_length=50,blank=True,null=True)
     proof_date=models.CharField(max_length=500,blank=True,null=True)
+    billed_date=models.CharField(max_length=500,blank=True,null=True)
 
 
 

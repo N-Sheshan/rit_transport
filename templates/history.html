@@ -12,16 +12,9 @@
     <link rel="stylesheet" href="{% static 'css/samplefromstyle.css' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/tablestyle.css' %}">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
-<script type="text/javascript" src="js/script.js"></script>
-<body>
+    
+    
+    <body>
  
 
 <!-- End vertical navbar -->
@@ -52,15 +45,29 @@
                                 <label>To Date</label>
                                 <input type="date" id="" name="to_date" placeholder="Enter TO date" min="" required>
                             </div>
-                            <div class="input-field">
+                            <!-- <div class="input-field ">
                                 <label>Vehicle NO</label>
-                                <select name="vehicle_no">
-                                    <option disabled hidden selected>Select vehicle NO</option>
-                                    {% for c in category %}
+                                 <select name="vehicle_no" class="selectpicker" id="select1" multiple>
+                                {% for c in vechical %}
                                     <option value="{{ c.vehicle_no }}">{{ c.vehicle_no }}</option>
                                     {% endfor %}
-                                </select>
+                              </select>
+                                
+                            </div> -->
+                            <div>
+                                <b>Select your choice:</b> 
+		<select id="checkboxes" multiple="multiple"> 
+			<option value="Linked list">Linked list</option>	 
+			<option value="Array">Array</option>			 
+			<option value="Strings">Strings</option> 
+			<option value="Stack">Stack</option> 
+			<option value="Queue">Queue</option>
+			<option value="Graph">Graph</option> 
+			<option value="Tree">Tree</option>
+			<option value="Maps">Maps</option>
+		</select> 
                             </div>
+                                                      
                         </div>
                     </div>
                     <div class="details ID">
@@ -154,17 +161,22 @@
             toDateInput.setAttribute('min', fromDate);
         });
     });
+  </script>  
+  
+    <script type="text/javascript">  
+      $("#select1").on("change",function() {
+  $("#select2").val($(this).val())   
+  $(".filter-option-inner-inner").html( $(this).val().length > 0 ? $(this).val().join(', ') : "Nothing selected")
+})
 
-    $(document).ready(function() {
-        $('#example').DataTable({
-            dom: 'Bfrtip',
-            buttons: [
-                'copy', 'csv', 'excel', 'pdf', 'print'
-            ]
-        });
-    });
-    </script>
-<!-- End demo content -->
+mobiscroll.select('#multiple-select', {
+    inputElement: document.getElementById('my-input'),
+    touchUi: false
+});
+
+
+  </script> 
+
 {% endblock %}
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

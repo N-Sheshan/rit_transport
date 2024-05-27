@@ -95,7 +95,7 @@ form .fields .input-field{
     width: calc(100% / 3 - 15px);
 }
 .input-field label,.availability-input-field label{
-    font-size: 1rem;
+    /* font-size: 1rem; */
     /* font-weight: 500; */
     color: #2e2e2e;
     margin-left: 8.5px;

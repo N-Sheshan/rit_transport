@@ -23,6 +23,9 @@ urlpatterns = [
     path('', views.fuel_application, name="fuel_application"),
     path('data_update', views.data_update, name="data_update"),
     path('history', views.history, name="history"),
+    path('new_vechical', views.new_vechical, name="new_vechical"),
     path('generate_pdf',views.generate_pdf, name='generate_pdf'),
     path('export_to_excel',views.export_to_excel, name='export_to_excel'),
+    path('get_bills/<str:vehicle_no>/', views.get_bills_for_vehicle, name='get_bills'),
+    #  path('your-export-view/', views.export_view, name='export_view')
 ]

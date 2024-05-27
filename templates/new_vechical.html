@@ -22,14 +22,14 @@
   <button id="sidebarCollapse" type="button" class="btn btn-light  rounded-pill shadow-sm px-4 "><i  class="fa fa-bars mr-2 toggleicon"></i><small class="text-uppercase font-weight-bold">Menu</small></button>
 </div>
   <!-- Demo content -->
-  <h2 class="display-5 "style="margin-bottom: .9rem;">Fuel Application From</h2>
+  <h2 class="display-5 "style="margin-bottom: .9rem;">New vechical Registration From</h2>
   <span></span>
 
   <div class="row ">
   <div class="container">
     <header>Registration</header>
 
-    <form method="POST" action="{% url 'fuel_application' %}" autocomplete="off" enctype="multipart/form-data">
+    <form method="POST" action="{% url 'new_vechical' %}" autocomplete="off" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="form first">
             <div class="details personal">
@@ -37,79 +37,49 @@
                 <div class="fields">
                     <div class="input-field">
                         <label>Vehicle NO</label>
-                        <select name="vehicle_no" required>
-                            <option value="" selected hidden>Select vehicle NO</option>
-                            {% for c in vechical %}
-                            <option value="{{ c.vehicle_no }}">{{ c.vehicle_no }}</option>
-                            {% endfor %}
+                        <input type="text" id="vehicle_no" name="vehicle_no" placeholder="Enter Vehicle NO" required>
+                    </div>
+    
+                    <div class="input-field">
+                        <label>Driver Name</label>
+                        <input type="text" id="Driver_Name" name="Driver_Name" placeholder="Enter Driver Name" required>
+                    </div>
+    
+                    <div class="input-field">
+                        <label>Driver Number</label>
+                        <input type="text" id="Driver_Number" name="Driver_Number" placeholder="Enter Driver Number"  required>
+                    </div>
+    
+                    <div class="input-field">
+                        <label>Route Number</label>
+                        <input type="text" id="Usage" name="Usage" placeholder="Enter Route Number"  required>
+                    </div>
+    
+                    <div class="input-field">
+                        <label>Fuel Type</label>
+                        <select name="fule_type" id="fule_type" required>
+                            <option value="" selected hidden>Select Fuel Type</option>
+                            <option value="Diesel">Diesel</option> 
+                            <option value="Petorl">Petorl</option>
+                        </select>
+                    </div>
+                    <div class="input-field">
+                        <label>Vehicle Type</label>
+                        <select name="vehicle_type" id="vehicle_type" required>
+                            <option value="" selected hidden>Select Vehicle Type</option>
+                            <option value="Four Wheeler">Four Wheeler</option> 
+                            <option value="Two Wheeler">Two Wheeler</option>
+                            <option value="Six Wheeler">Six Wheeler</option>
                         </select>
                     </div>
     
+                   
                     <div class="input-field">
-                        <label>Driver ID</label>
-                        <input type="text" id="driver_id" name="driver_id" placeholder="Enter Driver id" required>
+                        <label>Route Name</label>
+                        <input type="text" name="route_name" placeholder="Enter Route Name" required>
                     </div>
     
-                    <div class="input-field">
-                        <label>Date</label>
-                        <input type="date" id="" name="buying_date" placeholder="Enter Date" min="" required>
-                    </div>
-    
-                    <div class="input-field">
-                        <label>Engine Oil Quantity</label>
-                        <select name="engine_oil_quantity" required>
-                            <option value="" selected hidden>Select Engine Oil Quantity</option>
-                            <option value="None">None</option>
-                            {% for c in "x"|rjust:"10" %}
-                            <option value="{{ forloop.counter }}">{{ forloop.counter }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-    
-                    <div class="input-field">
-                        <label>Grease Company</label>
-                        <select name="grease_company" id="greaseCompany" required>
-                            <option value="" selected hidden>Select Grease Company</option>
-                            <option value="None">None</option> 
-                            <option value="LLB">LLB</option>
-                            <option value="MPS">MPS</option>
-                        </select>
-                    </div>
-                    <div  class="input-field" id="greaseQuantityField" style="display: none;">
-                    <div  > 
-                        <label>Grease Quantity</label>
-                        <select name="grease_quantity" id="greaseQuantity"> 
-                            <option value="None">None</option> 
-                            {% for c in "x"|rjust:"10" %}
-                            <option value="{{ forloop.counter }}">{{ forloop.counter }}</option>
-                            {% endfor %}
-                        </select>
-                    </div></div>
-    
-                    <div class="input-field">
-                        <label>Distilled Water</label>
-                        <select name="distilled_water_quantity" required>
-                            <option value="" selected hidden>Select Yes / NO</option>
-                            <option value="None">None</option>
-                            {% for c in "x"|rjust:"10" %}
-                            <option value="{{ forloop.counter }}">{{ forloop.counter }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-    
-                    <div class="input-field">
-                        <label>Reason</label>
-                        <input type="text" name="reason" placeholder="Enter Reason" required>
-                    </div>
-    
-                    <div class="input-field">
-                        <label>Approval</label>
-                        <select name="status" required>
-                            <option value="" selected hidden>Select Yes / NO</option>
-                            <option value="Yes">Yes</option>
-                            <option value="No">No</option>
-                        </select>
-                    </div>
+                
                 </div>
     
                 <button type="submit" class="nextBtn">

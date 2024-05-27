@@ -29,33 +29,47 @@
   <div class="row ">
   <div class="container">
     <header>Uploading Form</header>
-
-    <form method="POST" action="{% url 'data_update' %}" autocomplete="off"   enctype="multipart/form-data">
-        {% csrf_token %}
-        <div class="form first">
-            <div class="details personal">
-                <!-- <span class="title">Filtering Details</span> -->
-
-                <div class="fields">
-                    <div class="availability-input-field">
-                        <label>Bill ID</label>
-                        <input name="bill_id" type="text" placeholder="Enter Bill ID" required>
-                    </div>
-                    <div class="availability-input-field">
+    <form method="POST" action="{% url 'data_update' %}" autocomplete="off" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="form first">
+          <div class="details personal">
+              <div class="fields">
+                  <div class="availability-input-field">
+                      <label>Vehicle NO</label>
+                      <select id="vehicle_no" name="vehicle_no" required> 
+                          <option value="" selected hidden>Select Vehicle NO</option>
+                          {% for c in vechical %}
+                              <option value="{{ c.vehicle_no }}">{{ c.vehicle_no }}</option>
+                          {% endfor %}
+                      </select>
+                  </div>
+  
+                  <div class="availability-input-field">
+                      <label>Bill ID</label>
+                      <select id="bill_id" name="bill_id" required>
+                          <option value="" selected hidden>Select Bill ID</option> 
+                      </select>
+                  </div>
+  
+                  <div class="availability-input-field">
+                      <label>Fuel Quantity</label>
+                      <input type="number" name="fuel_quantity" placeholder="Enter Fuel Amount" required>
+                  </div>
+                  <div class="availability-input-field">
                       <label>Overall KM</label>
                       <input name="starting_KM" type="number" step="0.01" placeholder="Enter overall_km" required>
                   </div>
-                </div>
-            </div>
-
-            <div class="details ID">
-                <button type="submit" class="nextBtn">
-                    <span class="btnText">Upload</span>
-                    <i class="uil uil-navigator"></i>
-                </button>
-            </div> 
-        </div>
-    </form>
+              </div>
+          </div>
+  
+          <div class="details ID">
+              <button type="submit" class="nextBtn">
+                  <span class="btnText">Upload</span>
+                  <i class="uil uil-navigator"></i>
+              </button>
+          </div>
+      </div>
+  </form>
    
 </div>
 </div>
@@ -90,7 +104,32 @@
   });
 </script>->
 
+<script>
+  const vehicleSelect = document.getElementById('vehicle_no');
+  const billIdSelect = document.getElementById('bill_id');
 
+  vehicleSelect.addEventListener('change', function() {
+      const vehicleNo = this.value;
+      billIdSelect.innerHTML = '<option value="" selected hidden>Loading...</option>'; // Clear and show loading
+
+      if (vehicleNo) {
+          fetch(`/get_bills/${vehicleNo}/`) // Adjust the URL pattern if needed
+              .then(response => response.json())
+              .then(data => {
+                  billIdSelect.innerHTML = '<option value="" selected hidden>Select Bill ID</option>';
+                  data.bills.forEach(billId => {
+                      billIdSelect.innerHTML += `<option value="${billId}">${billId}</option>`;
+                  });
+              })
+              .catch(error => {
+                  console.error('Error fetching bill IDs:', error);
+                  billIdSelect.innerHTML = '<option value="" selected hidden>Error loading bills</option>';
+              });
+      } else {
+          billIdSelect.innerHTML = '<option value="" selected hidden>Select Bill ID</option>'; // Reset if no vehicle selected
+      }
+  });
+</script>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
