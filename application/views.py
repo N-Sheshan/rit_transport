@@ -6,6 +6,10 @@ from application.form import fuel_bill_detials,KM_update,Register_new_vechical
 from application.models import transport_approval,Master_Vechicle
 from django.db.models import Q
 from django.template.loader import render_to_string
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.pdfbase import pdfmetrics
 from openpyxl import Workbook
 import pdfkit
 from xhtml2pdf import pisa
@@ -34,15 +38,16 @@ def fuel_application(request):
             if master_data and form.cleaned_data['status'] == "Yes":
                 count = data.count()
                 user = form.save(commit=False)
-                user.bill_id = 'RIT'+str(current_year) + str(current_month) + f'{count + 1:03d}'
+                bill_id='RIT'+str(current_year) + str(current_month) + f'{count + 1:03d}'
+                user.bill_id = bill_id
                 user.vehicle_type = master_data.vehicle_type
                 user.fule_type = master_data.fule_type
                 user.route = master_data.route_name
                 user.billed_date = billed_date
                 user.save()
-                generate_pdf(request)
+                return redirect(generate_pdf,bill_id)
                 # return redirect(reverse('generate_pdf_view', kwargs={'bill_id': user.bill_id}))  
-                return render(request, "index.html", {"vechical": vechical, "success": "Bill details have been successfully submitted."})
+                # return render(request, "index.html", {"vechical": vechical, "success": "Bill details have been successfully submitted."})
             else:
                 return render(request, "index.html", {"vechical": vechical, 'error_message': 'Vehicle not found or approval not given'})
         else:
@@ -58,7 +63,7 @@ def data_update(request):
         proof_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         vechical_filter = get_object_or_404(transport_approval, bill_id=bill_id)
         vehicle_no = vechical_filter.vehicle_no
-        date = vechical_filter.buying_date
+        date = vechical_filter.billed_date
         # print('+++++++++++++++++',vehicle_no)
         if vechical_filter.starting_KM is None:
             vechical_list = transport_approval.objects.filter(vehicle_no=vehicle_no, billed_date__lte=date).order_by('billed_date')
@@ -95,7 +100,7 @@ def data_update(request):
                     else:
                         return render(request, "data_upload.html", {'error_message': f"Entered Kilometer Lesser than Starting km ,Ceck it and Enter again","vechical": vechical})
                 else:
-                    print("Error: Starting KM is None.")
+                    print("Error: Starting KM is None. So Upload the data in order")
                     return render(request, "data_upload.html", {'error_message': f"Starting KM is None.","vechical": vechical})
         else:
             return render(request, "data_upload.html", {'error_message': f"Kilometer already exists for this {bill_id} Bill ID, so data upload is not allowed","vechical": vechical})
@@ -147,7 +152,7 @@ def export_view(request):
         to_date = request.POST.get('to_date')
         vehicle_nos = request.POST.getlist('vehicle_no')
         export_format = request.POST.get('format')
-        print('******************',vehicle_nos)
+        print('******************',from_date,to_date,vehicle_nos,export_format)
         data = transport_approval.objects.all()  # Get your data (apply filters if needed)
 
         if from_date and to_date:
@@ -196,7 +201,7 @@ def export_to_pdf(data):
 
     buffer = BytesIO()
     p = canvas.Canvas(buffer, pagesize=letter)
-    p.setFont("Helvetica", 12)
+    p.setFont("TimesNewRoman", 12)
 
     # ... (Logic to format and add data to the PDF)
 
@@ -222,82 +227,110 @@ def new_vechical(request):
 
 
 
-def generate_pdf(request):
+def generate_pdf(request,bill_id):
     # print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> pdf')
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'inline; filename="your_file_name.pdf"'  # Open in a new tab
     # print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> pdf')
     p = canvas.Canvas(response, pagesize=letter)
     width, height = letter
-    # transport_approval = get_object_or_404(transport_approval, bill_id=bill_id)
+    data = transport_approval.objects.filter(bill_id=bill_id).first()
+    pdfmetrics.registerFont(TTFont('TimesNewRoman', 'C:/Windows/Fonts/times.ttf'))
+    pdfmetrics.registerFont(TTFont('TimesNewRoman-Bold', 'C:/Windows/Fonts/timesbd.ttf'))
+
     # Add watermark text within the rectangle
     watermark_text = "Ramco Institute of Technology"
-    p.setFont("Helvetica-Bold", 36)
+    p.setFont("TimesNewRoman", 36)
     p.setFillColorRGB(0.9, 0.9, 0.9)  # Light gray color for the watermark
     p.saveState()
     p.translate(300, 613)  # Translate to the center of the rectangle
     p.rotate(33)  # Rotate the text for the watermark effect
     p.drawCentredString(0, 0, watermark_text)
     p.restoreState()
-    p.setFont("Helvetica-Bold", 36)
+    p.setFont("TimesNewRoman-Bold", 36)
     # Title
-    p.setFont("Helvetica-Bold", 12)
+    p.setFont("TimesNewRoman-Bold", 12)
     p.setFillColorRGB(0, 0, 0)
     p.drawString(170, height - 50, "P.A.C.R. SETHURAMAMMAL CHARITY TRUST")
-    p.setFont("Helvetica", 10)
+    p.setFont("TimesNewRoman", 10)
     p.drawString(230, height - 70, "BPCL, DEALERS @ 236463")
     p.drawString(180, height - 85, "P.A.C. RAMASAMY RAJASALAI, RAJAPALAYAM.")
 
-    p.setFont("Helvetica-Bold", 10)
-    p.drawString(400, height - 30, "No:")
-    p.setFont("Helvetica", 10)
+    p.setFont("TimesNewRoman-Bold", 10)
+    p.drawString(400, height - 30, 'No :')
+    p.drawString(422, height - 30, data.bill_id)
 
-    p.setFont("Helvetica-Bold", 10)
-    p.drawString(380, height - 110, "Date&Time:")
-    p.setFont("Helvetica", 10)
+    p.setFont("TimesNewRoman", 10)
+
+    p.setFont("TimesNewRoman-Bold", 10)
+    p.setFont("TimesNewRoman", 10)
 
     # Car Details
-    p.setFont("Helvetica-Bold", 10)
-    p.drawString(100, height - 110, "Please Supply for Car No:")
-    p.setFont("Helvetica", 10)
+    p.setFont("TimesNewRoman-Bold", 10)
+    p.drawString(100, height - 110, "Please Supply for vechicle  No")
+    p.drawString(260, height - 110, ":")
+    p.drawString(270, height - 110, data.vehicle_no)
+    p.drawString(380, height - 110, "Date&Time")
+    p.drawString(435, height - 110, ":")
+    p.drawString(440, height - 110, data.billed_date)
+    p.setFont("TimesNewRoman", 10)
 
     # Items
-    p.setFont("Helvetica-Bold", 10)
+    p.setFont("TimesNewRoman-Bold", 10)
     p.drawString(180, height - 140, "Fuel Type")
-    p.drawString(260, height - 140, ":")
+    p.drawString(265, height - 140, ":")
+    p.drawString(276, height - 140, data.vehicle_type)
 
-    p.drawString(180, height - 160, "Amount")
-    p.drawString(260, height - 160, ":")
+    p.drawString(180, height - 160, "Fuel Quentity")
+    p.drawString(265, height - 160, ":")
+    p.drawString(276, height - 160, "Tank Full")
+    
+    p.drawString(180, height - 180, "Engine Oil")
+    p.drawString(265, height - 180, ":")
+    if data.engine_oil_quantity ==  'None':
+        p.drawString(276, height - 180, 'None')
+    else:
+        p.drawString(276, height - 180, data.engine_oil_quantity +' Liter')
+    
+    p.drawString(180, height - 200, "Grease Company")
+    p.drawString(265, height - 200, ":")
+    p.drawString(276, height - 200, data.grease_company)
 
-    p.drawString(180, height - 180, "Speed Petrol")
-    p.drawString(260, height - 180, ":")
+    if data.grease_quantity != 'None':
+        p.drawString(180, height - 220, "Grease")
+        p.drawString(265, height - 220, ":")
+        p.drawString(276, height - 220, data.grease_quantity +' Liter')
 
-    p.drawString(180, height - 200, "Engine Oil")
-    p.drawString(260, height - 200, ":")
+    if data.grease_quantity == 'None' and data.distilled_water_quantity != 'None':
+        p.drawString(180, height - 220, "Distilled Water")
+        p.drawString(265, height - 220, ":")
+        p.drawString(276, height - 220, data.distilled_water_quantity +' Liter')
+    else:
+        p.drawString(180, height - 240, "Distilled Water")
+        p.drawString(265, height - 240, ":")
+        p.drawString(276, height - 240, 'None')
 
-    p.drawString(180, height - 220, "Grease")
-    p.drawString(260, height - 220, ":")
-
-    p.drawString(180, height - 240, "Distilled Water")
-    p.drawString(260, height - 240, ":")
 
     # Signature and Address
-    p.setFont("Helvetica-Bold", 12)
+    p.setFont("TimesNewRoman-Bold", 12)
     p.drawString(100, height - 300, "Transport Incharge")
 
-    p.setFont("Helvetica-Bold", 12)
+    p.setFont("TimesNewRoman-Bold", 12)
     p.drawString(430, height - 300, "GM Admin")
 
     p.rect(50, 470, 500, 310)
    
     # Seal (simulated by drawing an ellipse and text)
-    image_path = "image.jpg"  # Update with the correct path
+    image_path = "static/images/imag1.jpg"  # Update with the correct path
     if os.path.isfile(image_path):
         img = Image.open(image_path)
         img_reader = ImageReader(img)
-        p.drawImage(img_reader, 340, height - 320, width=70, height=70)  # Adjust the coordinates and size as needed
+        p.drawImage(img_reader, 340, height - 310, width=70, height=70)  # Adjust the coordinates and size as needed
 
     p.showPage()
     p.save()
 
     return response
+
+
+

@@ -210,3 +210,18 @@ form .buttons button , .backBtn{
 .availability_details .fields .input-field label span {
     color: #265df2;
 }
+/* Ensure the select box dropdown appears above other elements */
+.input-field {
+    position: relative; /* Establish a stacking context */
+}
+
+.input-field select {
+    z-index: 10; /* Ensure the select box itself has a lower z-index than the dropdown */
+    position: relative; /* Ensure the select box is positioned relative to its parent */
+}
+
+/* Target the multiselect dropdown container */
+.multiselect-dropdown {
+    z-index: 1000; /* Ensure the dropdown has a high z-index */
+    position: absolute; /* Position the dropdown absolutely */
+}

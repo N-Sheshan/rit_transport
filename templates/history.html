@@ -1,190 +1,155 @@
 {% extends "base.html" %}
-
-<!DOCTYPE html>
-{% load static %}
-<html>
+<!doctype html>
+<html lang="en">
+    {% load static %}
     {% block maincontent %}
-<head>
-    <title>Bootstrap 4 Sidebar Menu Responsive with Sub menu  Create Responsive Side Navigation</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="{% static 'css/samplefromstyle.css' %}">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <link rel="stylesheet" href="{% static 'css/tablestyle.css' %}">
-    
-    
-    <body>
- 
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<!-- End vertical navbar -->
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
 
+    <title>Multiselect-dropdown demo!</title>
 
+<style>
+  select {width: 20em;
+    width: 20vw;
+ padding: 7.5px;}
 
-
-<div class="page-content p-5" id="content">
-    <div class="sidebarCollapse">
-        <button id="sidebarCollapse" type="button" class="btn btn-light  rounded-pill shadow-sm px-4 ">
-            <i class="fa fa-bars mr-2 toggleicon"></i><small class="text-uppercase font-weight-bold">Menu</small>
-        </button>
-    </div>
-    <h2 class="display-5" style="margin-bottom: .9rem;">History Table</h2>
-    <div class="row ">
-        <div class="container table_container">
-            <header>Uploading Form</header>
-            <form method="POST" autocomplete="off" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="form first">
-                    <div class="details personal">
-                        <div class="fields">
-                            <div class="input-field">
-                                <label>From Date</label>
-                                <input type="date" id="" name="from_date" placeholder="Enter From date" min="" required>
-                            </div>
-                            <div class="input-field">
-                                <label>To Date</label>
-                                <input type="date" id="" name="to_date" placeholder="Enter TO date" min="" required>
-                            </div>
-                            <!-- <div class="input-field ">
-                                <label>Vehicle NO</label>
-                                 <select name="vehicle_no" class="selectpicker" id="select1" multiple>
-                                {% for c in vechical %}
-                                    <option value="{{ c.vehicle_no }}">{{ c.vehicle_no }}</option>
-                                    {% endfor %}
-                              </select>
-                                
-                            </div> -->
-                            <div>
-                                <b>Select your choice:</b> 
-		<select id="checkboxes" multiple="multiple"> 
-			<option value="Linked list">Linked list</option>	 
-			<option value="Array">Array</option>			 
-			<option value="Strings">Strings</option> 
-			<option value="Stack">Stack</option> 
-			<option value="Queue">Queue</option>
-			<option value="Graph">Graph</option> 
-			<option value="Tree">Tree</option>
-			<option value="Maps">Maps</option>
-		</select> 
-                            </div>
-                                                      
+  
+</style>
+  </head>
+  <body>
+    <div class="page-content p-5" id="content">
+        <div class="sidebarCollapse">
+            <button id="sidebarCollapse" type="button" class="btn btn-light  rounded-pill shadow-sm px-4 ">
+                <i class="fa fa-bars mr-2 toggleicon"></i><small class="text-uppercase font-weight-bold">Menu</small>
+            </button>
+        </div>
+        <h2 class="display-5" style="margin-bottom: .9rem;">History Table</h2>
+        <div class="row ">
+            <div class="container table_container">
+                <header>Uploading Form</header>
+                <form method="POST" autocomplete="off" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form first">
+                        <div class="details personal">
+                            <div class="fields">
+                                <div class="input-field">
+                                    <label>From Date</label>
+                                    <input type="date" id="" name="from_date" placeholder="Enter From date" min="" required>
+                                </div>
+                                <div class="input-field">
+                                    <label>To Date</label>
+                                    <input type="date" id="" name="to_date" placeholder="Enter TO date" min="" required>
+                                </div>
+                                <div class="input-field" style="position: relative;">
+                                    <label for="vehicle_no">Vehicle NO</label>
+                                    <select name="vehicle_no" id="vehicle_no" multiple multiselect-search="true" multiselect-select-all="true" multiselect-max-items="3" 
+                                        onchange="console.log(this.selectedOptions)" style="position: relative; z-index: 10;">
+                                        {% for c in vechical %}
+                                        <option value="{{ c.vehicle_no }}">{{ c.vehicle_no }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                        </div>
+                        <div class="details ID">
+                            <button type="submit" class="nextBtn">
+                                <span class="btnText">Upload</span>
+                                <i class="uil uil-navigator"></i>
+                            </button>
                         </div>
                     </div>
-                    <div class="details ID">
-                        <button type="submit" class="nextBtn">
-                            <span class="btnText">Upload</span>
-                            <i class="uil uil-navigator"></i>
-                        </button>
-                    </div>
-                </div>
-            </form>
-
-            <main class="table" id="customers_table">
-                <section class="table__header">
-                    <div class="input-group">
-                        <input type="text" placeholder="Search Data...">
-                        <img src="/static/images/search.png" alt="">
-                    </div>
-                    <div class="export__file">
-                        <label for="export-file" class="export__file-btn" title="Export File"></label>
-                        <input type="checkbox" id="export-file">
-                        <div class="export__file-options">
-                            <label>Export As &nbsp; &#10140;</label>
-                            <a href="?download=excel" class="btn btn-primary" id="exportExcel">Export Excel</a>
-                            <a href="?download=pdf" class="btn btn-primary" id="exportPdf">Export PDF</a>
+                </form>
+    
+                <main class="table" id="customers_table">
+                    <section class="table__header">
+                        <div class="input-group">
+                            <input type="text" placeholder="Search Data...">
+                            <img src="/static/images/search.png" alt="">
                         </div>
-                    </div>
-                </section>
-                <section class="table__body">
-                    <table id="example" class="display nowrap" style="width:100%">
-                        <thead>
-                            <tr>
-                                <th>Bill ID</th>
-                                <th>Vehicle No</th>
-                                <th>Driver ID</th>
-                                <th>Vehicle Type</th>
-                                <th>Fuel Type</th>
-                                <th>Buying Date</th>
-                                <th>Reason</th>
-                                <th>Fuel Quantity</th>
-                                <th>Route</th>
-                                <th>Starting KM</th>
-                                <th>Ending KM</th>
-                                <th>Mileage</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for item in data %}
-                            <tr>
-                                <td>{{ item.bill_id }}</td>
-                                <td>{{ item.vehicle_no }}</td>
-                                <td>{{ item.driver_id }}</td>
-                                <td>{{ item.vehicle_type }}</td>
-                                <td>{{ item.fuel_type }}</td>
-                                <td>{{ item.buying_date }}</td>
-                                <td>{{ item.reason }}</td>
-                                <td>{{ item.fuel_quantity }}</td>
-                                <td>{{ item.route }}</td>
-                                <td>{{ item.starting_KM }}</td>
-                                <td>{{ item.Ending_KM }}</td>
-                                <td>{{ item.Mileage }}</td>
-                                <td>{{ item.status }}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </section>
-            </main>
+                        <div class="export__file">
+                            <label for="export-file" class="export__file-btn" title="Export File"></label>
+                            <input type="checkbox" id="export-file">
+                            <div class="export__file-options">
+                                <label>Export As &nbsp; &#10140;</label>
+                                <a href="?download=excel" class="btn btn-primary" id="exportExcel">Export Excel</a>
+                                <a href="?download=pdf" class="btn btn-primary" id="exportPdf">Export PDF</a>
+                            </div>
+                        </div>
+                    </section>
+                    <section class="table__body">
+                        <table id="example" class="display nowrap" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Bill ID</th>
+                                    <th>Vehicle No</th>
+                                    <th>Driver ID</th>
+                                    <th>Vehicle Type</th>
+                                    <th>Fuel Type</th>
+                                    <th>Buying Date</th>
+                                    <th>Reason</th>
+                                    <th>Fuel Quantity</th>
+                                    <th>Route</th>
+                                    <th>Starting KM</th>
+                                    <th>Ending KM</th>
+                                    <th>Mileage</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in data %}
+                                <tr>
+                                    <td>{{ item.bill_id }}</td>
+                                    <td>{{ item.vehicle_no }}</td>
+                                    <td>{{ item.driver_id }}</td>
+                                    <td>{{ item.vehicle_type }}</td>
+                                    <td>{{ item.fuel_type }}</td>
+                                    <td>{{ item.buying_date }}</td>
+                                    <td>{{ item.reason }}</td>
+                                    <td>{{ item.fuel_quantity }}</td>
+                                    <td>{{ item.route }}</td>
+                                    <td>{{ item.starting_KM }}</td>
+                                    <td>{{ item.Ending_KM }}</td>
+                                    <td>{{ item.Mileage }}</td>
+                                    <td>{{ item.status }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </section>
+                </main>
+            </div>
         </div>
     </div>
-</div>
- <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var fromDateInput = document.getElementById('fromdate');
-        var toDateInput = document.getElementById('todate');
-        console.log('----------------------sfromDateInput',fromDateInput)
-        // Get today's date in YYYY-MM-DD format
-        var today = new Date();
-        var day = String(today.getDate()).padStart(2, '0');
-        var month = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
-        var year = today.getFullYear();
-
-        today = year + '-' + month + '-' + day;
-
-        // Set the min attribute of the fromdate input to today's date
-        fromDateInput.setAttribute('min', today);
-
-        // Add event listener to fromdate input to update todate input min attribute
-        fromDateInput.addEventListener('change', function() {
-            var fromDate = fromDateInput.value;
-            toDateInput.setAttribute('min', fromDate);
+   
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var fromDateInput = document.getElementById('fromdate');
+            var toDateInput = document.getElementById('todate');
+            console.log('----------------------sfromDateInput',fromDateInput)
+            // Get today's date in YYYY-MM-DD format
+            var today = new Date();
+            var day = String(today.getDate()).padStart(2, '0');
+            var month = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
+            var year = today.getFullYear();
+    
+            today = year + '-' + month + '-' + day;
+    
+            // Set the min attribute of the fromdate input to today's date
+            fromDateInput.setAttribute('min', today);
+    
+            // Add event listener to fromdate input to update todate input min attribute
+            fromDateInput.addEventListener('change', function() {
+                var fromDate = fromDateInput.value;
+                toDateInput.setAttribute('min', fromDate);
+            });
         });
-    });
-  </script>  
-  
-    <script type="text/javascript">  
-      $("#select1").on("change",function() {
-  $("#select2").val($(this).val())   
-  $(".filter-option-inner-inner").html( $(this).val().length > 0 ? $(this).val().join(', ') : "Nothing selected")
-})
-
-mobiscroll.select('#multiple-select', {
-    inputElement: document.getElementById('my-input'),
-    touchUi: false
-});
-
-
-  </script> 
-
-{% endblock %}
-
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-<script src="script.js"></script>
-
-</body>
+      </script>  
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous"></script>
+    <script src="{% static 'JS/multiselect-dropdown.js' %}" ></script>
+  </body>
+  {% endblock %}
 </html>
-
-
