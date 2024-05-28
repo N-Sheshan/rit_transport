@@ -19,6 +19,7 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.utils import ImageReader
 from PIL import Image
 import os
+import io
 from PyPDF2 import PdfFileReader, PdfFileWriter
 # Create your views here.
 
@@ -45,9 +46,10 @@ def fuel_application(request):
                 user.route = master_data.route_name
                 user.billed_date = billed_date
                 user.save()
-                return redirect(generate_pdf,bill_id)
+            
+                # return redirect(generate_pdf,bill_id)
                 # return redirect(reverse('generate_pdf_view', kwargs={'bill_id': user.bill_id}))  
-                # return render(request, "index.html", {"vechical": vechical, "success": "Bill details have been successfully submitted."})
+                return render(request, "index.html", {"vechical": vechical, "success": "Bill details have been successfully submitted.",'bill_id':bill_id})
             else:
                 return render(request, "index.html", {"vechical": vechical, 'error_message': 'Vehicle not found or approval not given'})
         else:
@@ -96,7 +98,7 @@ def data_update(request):
                         print('--------------------------- km type and starting_KM', type(float(km)) , type(float(book.starting_KM)) )
                         print(f"Ending_KM: {book.Ending_KM}")
                         print(f"Mileage: {book.Mileage}")
-                        return render(request, "data_upload.html", {'success': f"The Kilometer have been successfully update in the respative Bill ID","vechical": vechical})
+                        return render(request, "data_upload.html", {'success': f"The Kilometer have been successfully update in the respative Bill ID","vechical": vechical,})
                     else:
                         return render(request, "data_upload.html", {'error_message': f"Entered Kilometer Lesser than Starting km ,Ceck it and Enter again","vechical": vechical})
                 else:
@@ -227,27 +229,31 @@ def new_vechical(request):
 
 
 
-def generate_pdf(request,bill_id):
-    # print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> pdf')
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'inline; filename="your_file_name.pdf"'  # Open in a new tab
-    # print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> pdf')
-    p = canvas.Canvas(response, pagesize=letter)
+def generate_pdf(request, bill_id):
+    # Create a file-like buffer to receive PDF data.
+    buffer = io.BytesIO()
+
+    # Create the PDF object, using the buffer as its "file."
+    p = canvas.Canvas(buffer, pagesize=letter)
     width, height = letter
+
+    # Fetch data from the database
     data = transport_approval.objects.filter(bill_id=bill_id).first()
+
+    # Register fonts
     pdfmetrics.registerFont(TTFont('TimesNewRoman', 'C:/Windows/Fonts/times.ttf'))
     pdfmetrics.registerFont(TTFont('TimesNewRoman-Bold', 'C:/Windows/Fonts/timesbd.ttf'))
 
-    # Add watermark text within the rectangle
+    # Add watermark text
     watermark_text = "Ramco Institute of Technology"
     p.setFont("TimesNewRoman", 36)
     p.setFillColorRGB(0.9, 0.9, 0.9)  # Light gray color for the watermark
     p.saveState()
-    p.translate(300, 613)  # Translate to the center of the rectangle
-    p.rotate(33)  # Rotate the text for the watermark effect
+    p.translate(300, 613)
+    p.rotate(33)
     p.drawCentredString(0, 0, watermark_text)
     p.restoreState()
-    p.setFont("TimesNewRoman-Bold", 36)
+
     # Title
     p.setFont("TimesNewRoman-Bold", 12)
     p.setFillColorRGB(0, 0, 0)
@@ -255,43 +261,37 @@ def generate_pdf(request,bill_id):
     p.setFont("TimesNewRoman", 10)
     p.drawString(230, height - 70, "BPCL, DEALERS @ 236463")
     p.drawString(180, height - 85, "P.A.C. RAMASAMY RAJASALAI, RAJAPALAYAM.")
-
+    
     p.setFont("TimesNewRoman-Bold", 10)
     p.drawString(400, height - 30, 'No :')
     p.drawString(422, height - 30, data.bill_id)
 
-    p.setFont("TimesNewRoman", 10)
-
-    p.setFont("TimesNewRoman-Bold", 10)
-    p.setFont("TimesNewRoman", 10)
-
     # Car Details
     p.setFont("TimesNewRoman-Bold", 10)
-    p.drawString(100, height - 110, "Please Supply for vechicle  No")
+    p.drawString(100, height - 110, "Please Supply for vehicle No")
     p.drawString(260, height - 110, ":")
     p.drawString(270, height - 110, data.vehicle_no)
     p.drawString(380, height - 110, "Date&Time")
     p.drawString(435, height - 110, ":")
     p.drawString(440, height - 110, data.billed_date)
-    p.setFont("TimesNewRoman", 10)
-
+    
     # Items
     p.setFont("TimesNewRoman-Bold", 10)
     p.drawString(180, height - 140, "Fuel Type")
     p.drawString(265, height - 140, ":")
     p.drawString(276, height - 140, data.vehicle_type)
 
-    p.drawString(180, height - 160, "Fuel Quentity")
+    p.drawString(180, height - 160, "Fuel Quantity")
     p.drawString(265, height - 160, ":")
     p.drawString(276, height - 160, "Tank Full")
-    
+
     p.drawString(180, height - 180, "Engine Oil")
     p.drawString(265, height - 180, ":")
-    if data.engine_oil_quantity ==  'None':
+    if data.engine_oil_quantity == 'None':
         p.drawString(276, height - 180, 'None')
     else:
-        p.drawString(276, height - 180, data.engine_oil_quantity +' Liter')
-    
+        p.drawString(276, height - 180, data.engine_oil_quantity + ' Liter')
+
     p.drawString(180, height - 200, "Grease Company")
     p.drawString(265, height - 200, ":")
     p.drawString(276, height - 200, data.grease_company)
@@ -299,38 +299,44 @@ def generate_pdf(request,bill_id):
     if data.grease_quantity != 'None':
         p.drawString(180, height - 220, "Grease")
         p.drawString(265, height - 220, ":")
-        p.drawString(276, height - 220, data.grease_quantity +' Liter')
+        p.drawString(276, height - 220, data.grease_quantity + ' Liter')
 
     if data.grease_quantity == 'None' and data.distilled_water_quantity != 'None':
         p.drawString(180, height - 220, "Distilled Water")
         p.drawString(265, height - 220, ":")
-        p.drawString(276, height - 220, data.distilled_water_quantity +' Liter')
+        p.drawString(276, height - 220, data.distilled_water_quantity + ' Liter')
     else:
         p.drawString(180, height - 240, "Distilled Water")
         p.drawString(265, height - 240, ":")
         p.drawString(276, height - 240, 'None')
 
-
     # Signature and Address
     p.setFont("TimesNewRoman-Bold", 12)
     p.drawString(100, height - 300, "Transport Incharge")
-
-    p.setFont("TimesNewRoman-Bold", 12)
     p.drawString(430, height - 300, "GM Admin")
 
+    # Rectangle for the main content
     p.rect(50, 470, 500, 310)
-   
+
     # Seal (simulated by drawing an ellipse and text)
-    image_path = "static/images/imag1.jpg"  # Update with the correct path
+    image_path = "static/images/imag1.jpg"
     if os.path.isfile(image_path):
         img = Image.open(image_path)
         img_reader = ImageReader(img)
         p.drawImage(img_reader, 340, height - 310, width=70, height=70)  # Adjust the coordinates and size as needed
 
+    # Finalize the PDF
     p.showPage()
     p.save()
 
-    return response
+    # Get the value of the buffer and close it
+    pdf = buffer.getvalue()
+    buffer.close()
 
+    # Create the HttpResponse object with the appropriate PDF headers
+    response = HttpResponse(pdf, content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="{bill_id}.pdf"'   # This will prompt a download
+
+    return response
 
 

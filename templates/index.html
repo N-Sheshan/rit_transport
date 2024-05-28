@@ -89,7 +89,7 @@
                     <div class="input-field">
                         <label>Distilled Water</label>
                         <select name="distilled_water_quantity" required>
-                            <option value="" selected hidden>Select Yes / NO</option>
+                            <option value="" selected hidden>Select Distilled Water</option>
                             <option value="None">None</option>
                             {% for c in "x"|rjust:"10" %}
                             <option value="{{ forloop.counter }}">{{ forloop.counter }}</option>
@@ -126,7 +126,7 @@
 <div id="popup" class="popup">
   <h2>Thank You!</h2>
   <p>{{ success }}</p>
-  <button id="close-btn">OK</button>
+  <a href="{% url 'generate_pdf' bill_id %}" style="color: white;"><button id="close-btn">Generate pdf</button></a>
 </div>
 {% endif %}
 
