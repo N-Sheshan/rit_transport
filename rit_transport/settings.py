@@ -68,7 +68,8 @@ TEMPLATES = [
         },
     },
 ]
-
+LOGIN_REDIRECT_URL = 'fuel_application'
+LOGOUT_REDIRECT_URL = 'login'
 WSGI_APPLICATION = 'rit_transport.wsgi.application'
 
 

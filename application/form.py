@@ -1,5 +1,5 @@
 from django import forms
-from .models import transport_approval,Master_Vechicle
+from .models import transport_approval,Master_Vechicle,User
 
 
 class fuel_bill_detials(forms.ModelForm):
@@ -21,3 +21,7 @@ class Register_new_vechical(forms.ModelForm):
         model = Master_Vechicle
         fields = ['vehicle_no','Usage','Driver_Name',"fule_type","vehicle_type",'Driver_Number','route_name']
         
+class userform(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['Name','email','Password','conform_Password']

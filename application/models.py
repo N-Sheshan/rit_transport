@@ -34,3 +34,10 @@ class Master_Vechicle(models.Model):
     Driver_Number = models.CharField(max_length=100,blank=True,null=True)
     route_name = models.CharField(max_length=1000,blank=True,null=True)
     
+
+class User(models.Model):
+    Name = models.CharField(max_length=100)
+    user_name = models.CharField(max_length=100)
+    email = models.CharField(max_length=100)
+    Password = models.CharField(max_length=100)
+    conform_Password = models.CharField(max_length=100)

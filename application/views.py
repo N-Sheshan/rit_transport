@@ -2,8 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from datetime import datetime
 from django.http import JsonResponse
 import pandas as pd
-from application.form import fuel_bill_detials,KM_update,Register_new_vechical
-from application.models import transport_approval,Master_Vechicle
+from application.form import fuel_bill_detials,KM_update,Register_new_vechical,userform
+from application.models import transport_approval,Master_Vechicle,User
 from django.db.models import Q
 from django.template.loader import render_to_string
 from reportlab.lib.pagesizes import letter
@@ -20,10 +20,63 @@ from reportlab.lib.utils import ImageReader
 from PIL import Image
 import os
 import io
+from django.contrib.auth import login as auth_login, authenticate
+from django.contrib.auth.decorators import login_required
 from PyPDF2 import PdfFileReader, PdfFileWriter
 # Create your views here.
 
+def encrypt_password(raw_password):
+    # Implement your password encryption algorithm (e.g., using hashlib)
+    import hashlib
+    return hashlib.sha256(raw_password.encode()).hexdigest()
 
+def login(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        print('----------------------------', email, password)
+        user = User.objects.filter(email=email).first()
+        if user:
+            if user.Password == encrypt_password(password):
+                return redirect('fuel_application')
+    
+
+    return render(request, "login.html")
+
+def signup(request):
+    if request.method == 'POST':
+        form = userform(request.POST)
+        if form.is_valid():
+            password = form.cleaned_data['Password']
+            confirm_password = form.cleaned_data['conform_Password']
+            email =  form.cleaned_data['email']
+            if password == confirm_password:
+                encrypted_password = encrypt_password(password)
+
+                # Save the encrypted password to your user model
+                data = User.objects.filter(email=email).first()
+                if data:
+                    form.add_error('email', 'email id is already exist')
+                    return render(request, "signup.html", {'form': form})
+                else:
+                    user = form.save(commit=False)  # Don't save the form yet
+                    user.Password = encrypted_password
+                    user.conform_Password = encrypted_password
+
+                    user.save()
+
+                # Redirect to a success page or login page
+                    return redirect('login')
+                # return render(request,'login.html')
+            else:
+                # Passwords don't match, return an error
+                form.add_error('conform_Password', 'Passwords do not match')
+                return render(request, "signup.html", {'form': form})
+        else:
+            return render(request, "signup.html", {'form': form})
+    else:
+        form = userform()
+        return render(request, "signup.html")
 def fuel_application(request):
     vechical = Master_Vechicle.objects.all()
     current_year = datetime.now().year

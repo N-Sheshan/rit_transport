@@ -63,26 +63,19 @@
                             </div>
                         </div>
                     </form>
-
+        
                     <main class="table" id="customers_table">
                         <section class="table__header">
                             <div class="input-group">
                                 <input type="text" placeholder="Search Data...">
-                                <img src="/static/images/search.png" alt="">
+                                <img src="{% static 'images/search.png' %}" alt="">
                             </div>
                             <div class="export__file">
                                 <label for="export-file" class="export__file-btn" title="Export File"></label>
                                 <input type="checkbox" id="export-file">
-                                <!-- <div class="export__file-options">
-                                    <label>Export As &nbsp; &#10140;</label>
-                                    <button class="btn btn-primary" id="exportExcel" style="color: white;">Export Excel</button>
-                                    <button class="btn btn-primary" id="exportPdf">Export PDF</button>
-                                </div> -->
-                                <div class="export__file-options" >
+                                <div class="export__file-options">
                                     <label>Export As &nbsp; &#10140;</label>
                                     <label for="export-file" class="btn btn-primary" style="color: black;" id="exportPdf">PDF <img src="{% static 'images/pdf.png' %}" alt=""></label>
-                                    <!-- <label for="export-file" class="btn btn-primary" id="exportPdf">JSON <img src="{% static 'images/json.png' %}" alt=""></label>
-                                    <label for="export-file" id="toCSV">CSV <img src="{% static 'images/csv.png' %}" alt=""></label> -->
                                     <label for="export-file" class="btn btn-primary" style="color: black;" id="exportExcel">EXCEL <img src="{% static 'images/excel.png' %}" alt=""></label>
                                 </div>
                             </div>
@@ -103,7 +96,7 @@
                                         <th>Starting KM</th>
                                         <th>Ending KM</th>
                                         <th>Mileage</th>
-                                        <!-- <th>Status</th> -->
+                                        <th>Status</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -121,7 +114,7 @@
                                         <td>{{ item.starting_KM }}</td>
                                         <td>{{ item.Ending_KM }}</td>
                                         <td>{{ item.Mileage }}</td>
-                                        <!-- <td>{{ item.status }}</td> -->
+                                        <td>{{ item.status }}</td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>
@@ -140,30 +133,10 @@
         <script src="{% static 'JS/multiselect-dropdown.js' %}"></script>
 
         <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                var fromDateInput = document.getElementById('fromdate');
-                var toDateInput = document.getElementById('todate');
-                console.log('----------------------fromDateInput', fromDateInput)
-                // Get today's date in YYYY-MM-DD format
-                var today = new Date();
-                var day = String(today.getDate()).padStart(2, '0');
-                var month = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
-                var year = today.getFullYear();
-
-                today = year + '-' + month + '-' + day;
-
-                // Set the min attribute of the fromdate input to today's date
-                fromDateInput.setAttribute('min', today);
-
-                // Add event listener to fromdate input to update todate input min attribute
-                fromDateInput.addEventListener('change', function() {
-                    var fromDate = fromDateInput.value;
-                    toDateInput.setAttribute('min', fromDate);
-                });
-
+           
                 // Export table to Excel
                 document.getElementById('exportExcel').addEventListener('click', function() {
-                    var wb = XLSX.utils.table_to_book(document.getElementById('example'), {sheet:"Sheet JS"});
+                    var wb = XLSX.utils.table_to_book(document.getElementById('example'), { sheet: "Sheet JS" });
                     XLSX.writeFile(wb, 'TableData.xlsx');
                 });
 
@@ -174,7 +147,7 @@
                     doc.autoTable({ html: '#example' });
                     doc.save('TableData.pdf');
                 });
-            });
+           
         </script>
     </body>
     {% endblock %}
