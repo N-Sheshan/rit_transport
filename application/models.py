@@ -33,6 +33,9 @@ class Master_Vechicle(models.Model):
     vehicle_type = models.CharField(max_length=100,blank=True,null=True)
     Driver_Number = models.CharField(max_length=100,blank=True,null=True)
     route_name = models.CharField(max_length=1000,blank=True,null=True)
+    Previous_km =models.FloatField(blank=True,null=True)
+
+
     
 
 class User(models.Model):

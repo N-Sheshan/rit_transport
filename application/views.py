@@ -114,7 +114,7 @@ def data_update(request):
     vechical = Master_Vechicle.objects.all()
     if request.method == 'POST':
         bill_id = request.POST.get('bill_id')
-        km =  request.POST.get('starting_KM')
+        km =  request.POST.get('Ending_KM')
         proof_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         vechical_filter = get_object_or_404(transport_approval, bill_id=bill_id)
         vehicle_no = vechical_filter.vehicle_no
@@ -127,8 +127,22 @@ def data_update(request):
             form = KM_update(request.POST, instance=vechical_filter)
             if len(vechical_list) < 2:
                 if form.is_valid():
-                    form.save()
+                    forms = form.save(commit=False)
+                    data = Master_Vechicle.objects.filter(vehicle_no=vehicle_no).first()
+                    # print('-----------------------', len(data))
+                    
+                    start_km = data.Previous_km
+                    # print('=================',vechical_filter.starting_KM)
+                    vechical_filter.starting_KM = start_km
+                    # print('=================',bill_id,vechical_filter.starting_KM)
+                    end_km=form.cleaned_data['Ending_KM']
+                    # end_km = form.cleaned_data['Ending_KM']
+                    forms.Mileage = round((float(end_km) - float(start_km)) / form.cleaned_data['fuel_quantity'], 2)
+                    forms.proof_date = proof_date
+                    vechical_filter.save()
+                    forms.save()
                     return render(request, "data_upload.html", {'form': form,"vechical": vechical,'success': f"The Kilometer have been successfully update in the respative Bill ID"})
+                
                 else:
                     print(form.errors)
                     return render(request, "error.html", {'form': form})
@@ -136,24 +150,29 @@ def data_update(request):
             else:
                 le= len(vechical_list)-2
                 book = vechical_list[le]
-                print('---------------------------')
-                print(f"Bill ID: {book.bill_id}")
-                print(f"Vehicle NO: {book.vehicle_no}")
-                print(f"Buying Date: {book.buying_date}")
-                print('--------------------------- km type and starting_KM', type(km) , type(book.starting_KM) )
-                if book.starting_KM is not None:
-                    if float(km) >float(book.starting_KM):
-                        book.Ending_KM = km
-                        book.Mileage = round((float(km)-float(book.starting_KM))/book.fuel_quantity,2)
-                        book.proof_date = proof_date
-                        book.save()
+                # print('---------------------------')
+                # print(f"Bill ID: {book.bill_id}")
+                # print(f"Vehicle NO: {book.vehicle_no}")
+                # print(f"Buying Date: {book.buying_date}")              
+                # print(f"Buying Date: {book.starting_KM}")
+                # print(f"Buying Date: {book.Ending_KM}")
+                # print('--------------------------- km type and starting_KM', type(km) , type(book.starting_KM) )
+                if book.Ending_KM is not None:
+                    # print('^^^^^^^^^^^^^^^^^^^^^^^^^^^',km,book.Ending_KM)
+                    if float(km) >float(book.Ending_KM):
+                        forms = form.save(commit=False)
+                        forms.starting_KM = book.Ending_KM
+                        forms.Ending_KM = km
+                        forms.Mileage = round((float(km)-float(forms.starting_KM))/forms.fuel_quantity,2)
+                        forms.proof_date = proof_date
+                        # book.save()
                         form.save()
-                        print('--------------------------- km type and starting_KM', type(float(km)) , type(float(book.starting_KM)) )
-                        print(f"Ending_KM: {book.Ending_KM}")
-                        print(f"Mileage: {book.Mileage}")
+                        # print('--------------------------- km type and starting_KM', type(float(km)) , type(float(book.starting_KM)) )
+                        # print(f"Ending_KM: {book.Ending_KM}")
+                        # print(f"Mileage: {book.Mileage}")
                         return render(request, "data_upload.html", {'success': f"The Kilometer have been successfully update in the respative Bill ID","vechical": vechical,})
                     else:
-                        return render(request, "data_upload.html", {'error_message': f"Entered Kilometer Lesser than Starting km ,Ceck it and Enter again","vechical": vechical})
+                        return render(request, "data_upload.html", {'error_message': f"Entered Kilometer Lesser than Ending km ,Ceck it and Enter again","vechical": vechical})
                 else:
                     print("Error: Starting KM is None. So Upload the data in order")
                     return render(request, "data_upload.html", {'error_message': f"Starting KM is None.","vechical": vechical})

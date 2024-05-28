@@ -57,7 +57,7 @@
                             </div>
                             <div class="details ID">
                                 <button type="submit" class="nextBtn">
-                                    <span class="btnText">Upload</span>
+                                    <span class="btnText">Filter</span>
                                     <i class="uil uil-navigator"></i>
                                 </button>
                             </div>
@@ -73,7 +73,7 @@
                             <div class="export__file">
                                 <label for="export-file" class="export__file-btn" title="Export File"></label>
                                 <input type="checkbox" id="export-file">
-                                <div class="export__file-options">
+                                <div class="export__file-options" style="z-index: 2000;">
                                     <label>Export As &nbsp; &#10140;</label>
                                     <label for="export-file" class="btn btn-primary" style="color: black;" id="exportPdf">PDF <img src="{% static 'images/pdf.png' %}" alt=""></label>
                                     <label for="export-file" class="btn btn-primary" style="color: black;" id="exportExcel">EXCEL <img src="{% static 'images/excel.png' %}" alt=""></label>
@@ -96,7 +96,8 @@
                                         <th>Starting KM</th>
                                         <th>Ending KM</th>
                                         <th>Mileage</th>
-                                        <th>Status</th>
+                                       
+                                        <th>Fuel Respect</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -106,7 +107,7 @@
                                         <td>{{ item.vehicle_no }}</td>
                                         <td>{{ item.driver_id }}</td>
                                         <td>{{ item.vehicle_type }}</td>
-                                        <td>{{ item.fuel_type }}</td>
+                                        <td>{{ item.fule_type }}</td>
                                         <td>{{ item.buying_date }}</td>
                                         <td>{{ item.reason }}</td>
                                         <td>{{ item.fuel_quantity }}</td>
@@ -114,7 +115,8 @@
                                         <td>{{ item.starting_KM }}</td>
                                         <td>{{ item.Ending_KM }}</td>
                                         <td>{{ item.Mileage }}</td>
-                                        <td>{{ item.status }}</td>
+                                       <td> <a href='{% url 'generate_pdf' item.bill_id %}'">Generate PDF</a></td>
+
                                     </tr>
                                     {% endfor %}
                                 </tbody>

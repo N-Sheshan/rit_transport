@@ -12,14 +12,14 @@ class fuel_bill_detials(forms.ModelForm):
 class KM_update(forms.ModelForm):
     class Meta:
         model = transport_approval
-        fields = ['bill_id','starting_KM','fuel_quantity']
-        exclude=["Ending_KM","Mileage",'proof_date']
+        fields = ['bill_id','Ending_KM','fuel_quantity']
+        exclude=["starting_KM","Mileage",'proof_date']
 
 
 class Register_new_vechical(forms.ModelForm):
     class Meta:
         model = Master_Vechicle
-        fields = ['vehicle_no','Usage','Driver_Name',"fule_type","vehicle_type",'Driver_Number','route_name']
+        fields = ['vehicle_no','Usage','Driver_Name',"fule_type","vehicle_type",'Driver_Number','route_name','Previous_km']
         
 class userform(forms.ModelForm):
     class Meta:
