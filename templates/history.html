@@ -39,28 +39,27 @@
                                 <div class="fields">
                                     <div class="input-field">
                                         <label>From Date</label>
-                                        <input type="date" id="fromdate" name="from_date" placeholder="Enter From date" min="" required>
+                                        <input type="date" id="" name="from_date" placeholder="Enter From date" min="" required>
                                     </div>
                                     <div class="input-field">
                                         <label>To Date</label>
-                                        <input type="date" id="todate" name="to_date" placeholder="Enter TO date" min="" required>
+                                        <input type="date" id="" name="to_date" placeholder="Enter TO date" min="" required>
                                     </div>
                                     <div class="input-field" style="position: relative;">
                                         <label for="vehicle_no">Vehicle NO</label>
-                                        <select name="vehicle_no" id="vehicle_no" multiple multiselect-search="true" multiselect-select-all="true" multiselect-max-items="3"
-                                                onchange="console.log(this.selectedOptions)" style="position: relative; z-index: 10;">
+                                        <select name="vehicle_no" id="vehicle_no" multiple multiselect-search="true" multiselect-select-all="true" multiselect-max-items="3" 
+                                            onchange="console.log(this.selectedOptions)" style="position: relative; z-index: 10;">
                                             {% for c in vechical %}
                                             <option value="{{ c.vehicle_no }}">{{ c.vehicle_no }}</option>
                                             {% endfor %}
                                         </select>
                                     </div>
-                                </div>
-                                <div class="details ID">
-                                    <button type="submit" class="nextBtn">
-                                        <span class="btnText">Upload</span>
-                                        <i class="uil uil-navigator"></i>
-                                    </button>
-                                </div>
+                            </div>
+                            <div class="details ID">
+                                <button type="submit" class="nextBtn">
+                                    <span class="btnText">Upload</span>
+                                    <i class="uil uil-navigator"></i>
+                                </button>
                             </div>
                         </div>
                     </form>
