@@ -183,8 +183,8 @@ def history(request):
             to_date = request.POST.get('to_date')
             vehicle_nos = request.POST.getlist('vehicle_no')  
             formate = request.POST.get('data_formate')  
-            month_numbers = [date.month for date in pd.date_range(from_date, to_date, freq='MS')]
-            month = MONTH_NAMES.get(max(month_numbers))
+            # month_numbers = [date.month for date in pd.date_range(from_date, to_date, freq='MS')]
+            # month = MONTH_NAMES.get(max(month_numbers))
             if formate == 'cumulative':
                 aggregated_data = []
                 if vehicle_nos:
@@ -209,7 +209,7 @@ def history(request):
         
                             data['additional_data'] = additional_data
                
-                return render(request, 'history.html', {'data':aggregated_data ,'vechical': vechical,'cumulative':True,'month': month})
+                return render(request, 'history.html', {'data':aggregated_data ,'vechical': vechical,'cumulative':True})
             else:
                 data = data.filter(vehicle_no__in=vehicle_nos,buying_date__range=[from_date, to_date])
                 context = {'data': data, 'vechical': vechical,'individual':True}
