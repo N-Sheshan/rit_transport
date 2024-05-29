@@ -57,19 +57,20 @@
     
                     <div class="input-field">
                         <label>Engine Oil Quantity</label>
-                        <select name="engine_oil_quantity" required>
+                        <input type="text" name="engine_oil_quantity" id="engine_oil_quantity" placeholder="Enter Grease Quantity" required>
+                        <!-- <select name="engine_oil_quantity" required>
                             <option value="" selected hidden>Select Engine Oil Quantity</option>
                             <option value="None">None</option>
                             {% for c in "x"|rjust:"10" %}
                             <option value="{{ forloop.counter }}">{{ forloop.counter }}</option>
                             {% endfor %}
-                        </select>
+                        </select> -->
                     </div>
     
                     <div class="input-field">
-                        <label>Grease Company</label>
+                        <label>Grease Type</label>
                         <select name="grease_company" id="greaseCompany" required>
-                            <option value="" selected hidden>Select Grease Company</option>
+                            <option value="" selected hidden>Select Grease Type</option>
                             <option value="None">None</option> 
                             <option value="LLB">LLB</option>
                             <option value="MP3">MP3</option>
@@ -78,23 +79,25 @@
                     <div  class="input-field" id="greaseQuantityField" style="display: none;">
                     <div  > 
                         <label>Grease Quantity</label>
-                        <select name="grease_quantity" id="greaseQuantity"> 
-                            <option value="None">None</option> 
-                            {% for c in "x"|rjust:"10" %}
+                        <input type="text" name="grease_quantity" id="greaseQuantity" placeholder="Enter Grease Quantity" required>
+                        <!-- <select name="grease_quantity" id="greaseQuantity"> 
+                            <option value="None">None</option>
+                            {% for c in "x"|rjust:"50" %}
                             <option value="{{ forloop.counter }}">{{ forloop.counter }}</option>
                             {% endfor %}
-                        </select>
+                        </select> -->
                     </div></div>
     
                     <div class="input-field">
                         <label>Distilled Water</label>
-                        <select name="distilled_water_quantity" required>
+                        <input type="text" name="distilled_water_quantity" placeholder="Enter Distilled Water" required>
+                        <!-- <select name="distilled_water_quantity" required>
                             <option value="" selected hidden>Select Distilled Water</option>
                             <option value="None">None</option>
                             {% for c in "x"|rjust:"10" %}
                             <option value="{{ forloop.counter }}">{{ forloop.counter }}</option>
                             {% endfor %}
-                        </select>
+                        </select> -->
                     </div>
     
                     <div class="input-field">

@@ -20,15 +20,15 @@ from application import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.login, name="login"),
-     path('signup', views.signup, name="signup"),
+    path('', views.login_view, name="login"),
+    path('signup', views.signup, name="signup"),
+    path('logout', views.logout_view, name="logout"),
+    # path('register/', views.register, name='register'),
     path('fuel_application/', views.fuel_application, name="fuel_application"),
     path('data_update', views.data_update, name="data_update"),
     path('history', views.history, name="history"),
     path('new_vechical', views.new_vechical, name="new_vechical"),
     path('generate_pdf/<path:bill_id>/',views.generate_pdf, name='generate_pdf'),
-    # path('export_to_excel',views.export_to_excel, name='export_to_excel'),
     path('get_bills/<str:vehicle_no>/', views.get_bills_for_vehicle, name='get_bills'),
-    # path('export_view/', views.export_view, name='export_view'),
-    # path('accounts/', include('django.contrib.auth.urls')), 
+
 ]

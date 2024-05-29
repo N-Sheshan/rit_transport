@@ -37,21 +37,29 @@
                         <div class="form first">
                             <div class="details personal">
                                 <div class="fields">
-                                    <div class="input-field">
+                                    <div class="availability-input-field">
                                         <label>From Date</label>
-                                        <input type="date" id="" name="from_date" placeholder="Enter From date" min="" required>
+                                        <input type="date" id="from-date" name="from_date" placeholder="Enter From date" min="" required>
                                     </div>
-                                    <div class="input-field">
+                                    <div class="availability-input-field">
                                         <label>To Date</label>
-                                        <input type="date" id="" name="to_date" placeholder="Enter TO date" min="" required>
+                                        <input type="date" id="to-date" name="to_date" placeholder="Enter TO date" min="" required>
                                     </div>
-                                    <div class="input-field" style="position: relative;">
+                                    <div class="availability-input-field" style="position: relative;">
                                         <label for="vehicle_no">Vehicle NO</label>
-                                        <select name="vehicle_no" id="vehicle_no" multiple multiselect-search="true" multiselect-select-all="true" multiselect-max-items="3" 
-                                            onchange="console.log(this.selectedOptions)" style="position: relative; z-index: 10;">
+                                        <select required name="vehicle_no" id="vehicle_no" multiple multiselect-search="true" multiselect-select-all="true" multiselect-max-items="3" 
+                                            onchange="console.log(this.selectedOptions)" style="position: relative; z-index: 10;" >
                                             {% for c in vechical %}
                                             <option value="{{ c.vehicle_no }}">{{ c.vehicle_no }}</option>
                                             {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="availability-input-field">
+                                        <label>Format</label>
+                                        <select name="data_formate" id="data_formate" required>
+                                            <option value="" selected hidden>Select Format</option>
+                                            <option value="individual">individual</option> 
+                                            <option value="cumulative">cumulative</option>
                                         </select>
                                     </div>
                             </div>
@@ -83,6 +91,7 @@
                         <section class="table__body">
                             <table id="example" class="display nowrap" style="width:100%">
                                 <thead>
+                                    {% if individual %}
                                     <tr>
                                         <th>Bill ID</th>
                                         <th>Vehicle No</th>
@@ -96,11 +105,26 @@
                                         <th>Starting KM</th>
                                         <th>Ending KM</th>
                                         <th>Mileage</th>
-                                       
                                         <th>Fuel Respect</th>
                                     </tr>
+                                    {% endif %}
+                                    {% if cumulative %}
+                                    <tr>
+                                        <th>Vehicle No</th>
+                                        <th>Vehicle Type</th>
+                                        <th>Fuel Type</th>
+                                        <th>Month</th>
+                                        <th>Route</th>
+                                        <th>Total Fuel</th>
+                                        <th>Starting KM</th>
+                                        <th>Ending KM</th>
+                                        <th>Total KM</th>
+                                        <th>Average Mileage</th>
+                                    </tr>
+                                    {% endif %}
                                 </thead>
                                 <tbody>
+                                    {% if individual %}
                                     {% for item in data %}
                                     <tr>
                                         <td>{{ item.bill_id }}</td>
@@ -115,10 +139,26 @@
                                         <td>{{ item.starting_KM }}</td>
                                         <td>{{ item.Ending_KM }}</td>
                                         <td>{{ item.Mileage }}</td>
-                                       <td> <a href='{% url 'generate_pdf' item.bill_id %}'">Generate PDF</a></td>
-
+                                        <td> <a href='{% url 'generate_pdf' item.bill_id %}'">Generate PDF</a></td>
                                     </tr>
                                     {% endfor %}
+                                    {% endif %}
+                                    {% if cumulative %}
+                                    {% for item in data %}
+                                    <tr>
+                                        <td>{{ item.additional_data.0 }}</td>  <!-- vehicle_no -->
+                                        <td>{{ item.additional_data.1 }}</td>  <!-- vehicle_type -->
+                                        <td>{{ item.additional_data.2 }}</td>  <!-- fuel_type -->
+                                        <td>{{ month }}</td>
+                                        <td>{{ item.additional_data.3 }}</td> 
+                                        <td>{{ item.total_fuel }}</td>
+                                        <td>{{ item.start_km }}</td>
+                                        <td>{{ item.end_km }}</td>
+                                        <td>{{ item.total_km }}</td>
+                                        <td>{{ item.average_mileage }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                    {% endif %}
                                 </tbody>
                             </table>
                         </section>
@@ -135,7 +175,25 @@
         <script src="{% static 'JS/multiselect-dropdown.js' %}"></script>
 
         <script>
-           
+         const fromDateInput = document.getElementById('from-date');
+const toDateInput = document.getElementById('to-date');
+
+// Add event listener to "From Date" input field
+fromDateInput.addEventListener('change', function() {
+    // Parse selected date strings into Date objects
+    const fromDate = new Date(this.value);
+    const toDate = new Date(toDateInput.value);
+
+    // Check if the selected "From Date" is greater than the current "To Date"
+    if (fromDate > toDate) {
+        // If so, set the "To Date" value to the selected "From Date"
+        toDateInput.value = this.value;
+    }
+    
+    // Update the min attribute of "To Date" input field
+    toDateInput.min = this.value;
+});
+
                 // Export table to Excel
                 document.getElementById('exportExcel').addEventListener('click', function() {
                     var wb = XLSX.utils.table_to_book(document.getElementById('example'), { sheet: "Sheet JS" });

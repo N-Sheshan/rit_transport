@@ -30,7 +30,7 @@
       </div>
     </div>
   </div>
-
+<!-- <div><a href="{% url 'logout' %}" onclick="logout()">Logout</a></div> -->
   <p class="text-gray font-weight-bold text-uppercase px-3 small pb-4 mb-0">Dashboard</p>
 
   <ul class="nav flex-column bg-white mb-0">
@@ -59,7 +59,14 @@
                 Add New Vechical
             </a>
     </li>
- 
+    <br><br><br>
+    <li class="nav-item">
+      
+      <a href="{% url 'logout' %}" onclick="logout()" class="nav-link text-dark"><button>
+                Logout </button>
+            </a>
+          
+    </li>
   </ul>
 
 </div>
@@ -69,6 +76,16 @@
 
 
 <!-- End demo content -->
+<script>
+  function logout() {
+      // Clear session storage
+      sessionStorage.clear();
+
+      // Clear browser history
+      window.location.replace('/login');  // Redirect to login page
+      window.history.forward();
+  }
+</script>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>

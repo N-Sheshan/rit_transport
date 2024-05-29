@@ -6,6 +6,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/style1.css' %}">
+    <link rel="stylesheet" href="{% static 'css/popup.css' %}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <title>Ramco Institute of Technology</title>
     <style>
         body {background-image: url({% static 'images/background.jpg' %});
@@ -15,67 +19,91 @@
             }
     </style>
 <body >
-    {% block header %}
-
     <div class="rit"></div>
     <img src="{% static 'images/rit.jpg' %}" alt="">
-    <div class="container">
-        <!-- <div class="heading">B.E/B.TECH I YEAR & II YEAR (LATERAL ENTRY) ADMISSION FORM</div> -->
-        <form method="post" action="{% url 'signup' %}" enctype="multipart/form-data"  onsubmit="hideButton()">
-        {% csrf_token %}
+    <div class="container">           
+
+        
+<div class="container container-login" style="margin-top: 100px;margin-top: 100px; font-size:larger;">
+   
+    <div class="row justify-content-center">
+    
+        <form method="post" action="{% url 'signup' %}" autocomplete="off"  enctype="multipart/form-data">
+            {% csrf_token %}
             <div class="form-all">
                 <div class="admission">
                     <br><br><br><br>
-                <!-- <span class="title"><b>ADMISSION</b></span> -->
-<!--            
-            <div class="PERSONALINFORMATION">
-                <span class="title"><b>I. PERSONAL INFORMATION</b></span> -->
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="input1">Name</label>
-                        <input type="text" name="Name" id="Name" class="form-control" placeholder="Enter the name" required>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="Name">Name</label>
+                                <input type="text" name="Name" id="Name" class="form-control" placeholder="Enter the name" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="email">Email-ID</label>
+                                <input type="email" name="email" class="form-control" placeholder="Enter email" required>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="input1">Email-ID</label>
-                        <input type="email" name="email" class="form-control" placeholder="Enter email" required/>
-
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="input1">Password</label>
-                        <input type="Password" name="Password" class="form-control" placeholder="Enter Password'" required/>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="input2">Conform Password</label>
-                        <input type="Password" name="conform_Password" class="form-control" placeholder="Enter conform_Password" required/>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="Password">Password</label>
+                                <input type="password" name="Password" class="form-control" placeholder="Enter Password" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="conform_Password">Confirm Password</label>
+                                <input type="password" name="conform_Password" class="form-control" placeholder="Enter Confirm Password" required>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-           
-        </div>
-        </div>
-        <div class="but" style="margin-left: 850px;">
-            <button type="submit"  id="" class="btn btn-primary">Register</button>
+            <div class="but" style="margin-left: 850px;">
+                <button type="submit" class="btn btn-primary">Register</button>
+            </div>
         </form>
-            
-        </div>
-    </div>
+      </div>
+   
+  </div>
+</div>
 
+<!-- {% if success %}
+<div id="popup" class="popup">
+  <h2>Thank You!</h2>
+  <p>{{ success }}</p>
+  <a href="{% url 'generate_pdf' bill_id %}" style="color: white;"><button id="close-btn">Generate pdf</button></a>
+</div>
+{% endif %}
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="{% static 'js/script.js' %}"></script>
+{% if error_message %}
+<div id="popup" class="popup">
+  <h2>Error</h2>
+  <p>{{ error_message }}</p>
+  <button id="close-btn">OK</button>
+</div>
+{% endif %} -->
+<script>
+   // Get the "Bill It" button
+    
+   document.addEventListener('DOMContentLoaded', function() {
+    const popup = document.getElementById('popup');
+    const closeBtn = document.getElementById('close-btn');
 
-    {% endblock %}
-
+    if (popup) {
+      popup.style.display = 'block';
+      closeBtn.addEventListener('click', function() {
+        popup.style.display = 'none';
+      });
+    }
+  });
+</script>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
