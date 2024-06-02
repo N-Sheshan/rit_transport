@@ -30,5 +30,6 @@ urlpatterns = [
     path('new_vechical', views.new_vechical, name="new_vechical"),
     path('generate_pdf/<path:bill_id>/',views.generate_pdf, name='generate_pdf'),
     path('get_bills/<str:vehicle_no>/', views.get_bills_for_vehicle, name='get_bills'),
+    path('scan/', views.qr_scanner, name='qr_scanner'),
 
 ]

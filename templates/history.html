@@ -138,7 +138,11 @@
                                         <td>{{ item.starting_KM }}</td>
                                         <td>{{ item.Ending_KM }}</td>
                                         <td>{{ item.Mileage }}</td>
-                                        <td> <a href='{% url 'generate_pdf' item.bill_id %}'">Generate PDF</a></td>
+                                        {% if item.Ending_KM != None %}
+                                        <td> <a href='{% url 'generate_pdf' item.bill_id %}'">Generate PDF</a></td>{% endif %}
+                                        {% if item.Ending_KM == None %}
+                                        <td>Completed</td>{% endif %}
+
                                     </tr>
                                     {% endfor %}
                                     {% endif %}

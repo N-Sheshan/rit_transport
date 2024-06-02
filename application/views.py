@@ -20,6 +20,13 @@ from reportlab.lib.utils import ImageReader
 from PIL import Image
 import os
 import io
+from io import BytesIO
+import qrcode
+from reportlab.lib import pdfencrypt
+import re
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
 
 
 
@@ -83,6 +90,9 @@ def fuel_application(request):
                     count = data.count()
                     user = form.save(commit=False)
                     bill_id='RIT'+str(current_year) + str(current_month) + f'{count + 1:03d}'
+                    user.engine_oil_quantity =  user.engine_oil_quantity if  user.engine_oil_quantity.isnumeric() else 'None'
+                    user.grease_quantity =  user.grease_quantity if  user.grease_quantity.isnumeric() else 'None'
+                    user.distilled_water_quantity =  user.distilled_water_quantity if  user.distilled_water_quantity.isnumeric() else 'None'
                     user.bill_id = bill_id
                     user.vehicle_type = master_data.vehicle_type
                     user.fule_type = master_data.fule_type
@@ -235,7 +245,43 @@ def new_vechical(request):
 
 
 
+import io
+import os
+from PIL import Image
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.utils import ImageReader
+from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.pdfbase import pdfmetrics
+import hashlib
+import qrcode
+from django.http import HttpResponse
+from django.shortcuts import redirect
 
+def hash_function(value, algorithm='sha256'):
+    salt = "audit"
+    value_bytes = str(value).encode()
+    salt_bytes = salt.encode()
+    salted_value = salt_bytes + value_bytes
+    hash_func = hashlib.new(algorithm)
+    hash_func.update(salted_value)
+    return hash_func.hexdigest()
+
+def generate_qr_code(data):
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(data)
+    qr.make(fit=True)
+    img = qr.make_image(fill='black', back_color='white')
+    
+    buffer = io.BytesIO()
+    img.save(buffer, format="PNG")
+    buffer.seek(0)
+    return buffer
 
 def generate_pdf(request, bill_id):
     # Create a file-like buffer to receive PDF data.
@@ -244,112 +290,167 @@ def generate_pdf(request, bill_id):
     # Create the PDF object, using the buffer as its "file."
     p = canvas.Canvas(buffer, pagesize=letter)
     width, height = letter
+    referer = request.META.get('HTTP_REFERER')
+    path = referer.split('/')[-1] if referer is not None else None
 
     # Fetch data from the database
     data = transport_approval.objects.filter(bill_id=bill_id).first()
+    if request.session.get('user_auth'):
+        value = f'N.Govindaraju / 2500 K.S Selvaraj / 2369 {data.bill_id} {data.billed_date}'
+        qr_data = f'{value}\n\n{hash_function(value)}'
+        
+        qr_buffer = generate_qr_code(qr_data)
+        qr_img = ImageReader(qr_buffer)
 
-    # Register fonts
-    pdfmetrics.registerFont(TTFont('TimesNewRoman', 'C:/Windows/Fonts/times.ttf'))
-    pdfmetrics.registerFont(TTFont('TimesNewRoman-Bold', 'C:/Windows/Fonts/timesbd.ttf'))
+        # Register fonts
+        pdfmetrics.registerFont(TTFont('TimesNewRoman', 'C:/Windows/Fonts/times.ttf'))
+        pdfmetrics.registerFont(TTFont('TimesNewRoman-Bold', 'C:/Windows/Fonts/timesbd.ttf'))
 
-    # Add watermark text
-    watermark_text = "Ramco Institute of Technology"
-    p.setFont("TimesNewRoman", 36)
-    p.setFillColorRGB(0.9, 0.9, 0.9)  # Light gray color for the watermark
-    p.saveState()
-    p.translate(300, 613)
-    p.rotate(33)
-    p.drawCentredString(0, 0, watermark_text)
-    p.restoreState()
+        # Add watermark text
+        watermark_text = "Ramco Institute of Technology"
+        p.setFont("TimesNewRoman", 36)
+        p.setFillColorRGB(0.9, 0.9, 0.9)  # Light gray color for the watermark
+        p.saveState()
+        p.translate(300, 613)
+        p.rotate(33)
+        p.drawCentredString(0, 0, watermark_text)
+        p.restoreState()
 
-    # Title
-    p.setFont("TimesNewRoman-Bold", 12)
-    p.setFillColorRGB(0, 0, 0)
-    p.drawString(170, height - 50, "P.A.C.R. SETHURAMAMMAL CHARITY TRUST")
-    p.setFont("TimesNewRoman", 10)
-    p.drawString(230, height - 70, "BPCL, DEALERS @ 236463")
-    p.drawString(180, height - 85, "P.A.C. RAMASAMY RAJASALAI, RAJAPALAYAM.")
-    
-    p.setFont("TimesNewRoman-Bold", 10)
-    p.drawString(400, height - 30, 'No :')
-    p.drawString(422, height - 30, data.bill_id)
+        # Title
+        p.setFont("TimesNewRoman-Bold", 13)
+        p.setFillColorRGB(0, 0, 0)
+        p.drawString(190, height - 30, "Ramco Institute of Technology")
+        p.setFont("TimesNewRoman", 12)
+        p.drawString(240, height - 42, "Rajapalayam")
+        p.drawString(220, height - 54, "Fuel Requisition Slip")
+        p.setFont("TimesNewRoman-Bold", 12)
+        p.drawString(370, height - 75, 'Recipt No :')
+        p.drawString(430, height - 75, data.bill_id)
+        p.setFont("TimesNewRoman-Bold", 12)
+        p.drawString(70, height - 80, "To :")
+        p.setFont("TimesNewRoman", 10)
+        p.drawString(100, height - 100, "P.A.C.R. SETHURAMAMMAL CHARITY TRUST,")
+        p.drawString(100, height - 111, "BPCL, DEALERS @ 236463,")
+        p.drawString(100, height - 122, "P.A.C. RAMASAMY RAJASALAI, RAJAPALAYAM.")
 
-    # Car Details
-    p.setFont("TimesNewRoman-Bold", 10)
-    p.drawString(100, height - 110, "Please Supply for vehicle No")
-    p.drawString(260, height - 110, ":")
-    p.drawString(270, height - 110, data.vehicle_no)
-    p.drawString(380, height - 110, "Date&Time")
-    p.drawString(435, height - 110, ":")
-    p.drawString(440, height - 110, data.billed_date)
-    
-    # Items
-    p.setFont("TimesNewRoman-Bold", 10)
-    p.drawString(180, height - 140, "Fuel Type")
-    p.drawString(265, height - 140, ":")
-    p.drawString(276, height - 140, data.fule_type)
+        # Car Details
+        p.setFont("TimesNewRoman-Bold", 10)
+        p.drawString(100, height - 150, "Please Supply for vehicle No")
+        p.drawString(260, height - 150, ":")
+        p.drawString(270, height - 150, data.vehicle_no)
+        p.drawString(370, height - 130, "Date&Time")
+        p.drawString(425, height - 130, ":")
+        p.drawString(430, height - 130, data.billed_date)
+        
+        # Items
+        p.setFont("TimesNewRoman-Bold", 10)
+        p.drawString(130, height - 170, "Fuel Type")
+        p.drawString(260, height - 170, ":")
+        p.drawString(270, height - 170, data.fule_type)
 
-    p.drawString(180, height - 160, "Vehicle Type")
-    p.drawString(265, height - 160, ":")
-    p.drawString(276, height - 160, data.vehicle_type)
+        p.drawString(130, height - 190, "Vehicle Type")
+        p.drawString(260, height - 190, ":")
+        p.drawString(270, height - 190, data.vehicle_type)
 
+        p.drawString(130, height - 210, "Fuel Quantity")
+        p.drawString(260, height - 210, ":")
+        p.drawString(270, height - 210, "Tank Full")
 
-    p.drawString(180, height - 180, "Fuel Quantity")
-    p.drawString(265, height - 180, ":")
-    p.drawString(276, height - 180, "Tank Full")
+        p.drawString(130, height - 230, "Engine Oil")
+        p.drawString(260, height - 230, ":")
+        if data.engine_oil_quantity == 'None':
+            p.drawString(270, height - 230, 'None')
+        else:
+            p.drawString(270, height - 230, data.engine_oil_quantity + ' Liter')
 
-    p.drawString(180, height - 200, "Engine Oil")
-    p.drawString(265, height - 200, ":")
-    if data.engine_oil_quantity == 'None':
-        p.drawString(276, height - 200, 'None')
+        p.drawString(130, height - 250, "Grease Type")
+        p.drawString(260, height - 250, ":")
+        p.drawString(270, height - 250, data.grease_company)
+
+        p.drawString(130, height - 265, "Grease")
+        p.drawString(260, height - 265, ":")
+        if data.grease_quantity == 'None':
+            p.drawString(270, height - 265, 'None')
+        else:
+            p.drawString(270, height - 265, data.grease_quantity + ' kG')
+
+        p.drawString(130, height - 280, "Distilled Water")
+        p.drawString(260, height - 280, ":")
+        if data.distilled_water_quantity == 'None':
+            p.drawString(270, height - 280, 'None')
+        else:
+            p.drawString(270, height - 280, data.distilled_water_quantity + ' Liter')
+
+        # Signature and Address
+        p.setFont("TimesNewRoman-Bold", 12)
+        p.drawString(110, height - 320, "Transport Incharge")
+        p.drawString(420, height - 320, "GM Admin")
+        p.setFont("TimesNewRoman", 11)
+        p.drawString(100, height - 334, "( N.Govindaraju / 2500 )")
+        p.drawString(410, height - 334, "( Selva Raj / 2369 )")
+        
+        # Rectangle for the main content
+        p.rect(50, 450, 500, 330)
+
+        # Seal (simulated by drawing an ellipse and text)
+        image_path = "static/images/imag1.jpg"
+        if os.path.isfile(image_path):
+            img = Image.open(image_path)
+            img_reader = ImageReader(img)
+            p.drawImage(img_reader, 340, height - 330, width=70, height=70)
+
+        # Draw QR Code Image
+        p.drawImage(qr_img, 400, height - 250, width=100, height=100) 
+
+        # Finalize the PDF
+        p.showPage()
+        p.save()
+
+        # Get the value of the buffer and close it
+        pdf = buffer.getvalue()
+        buffer.close()
+
+        # Create the HttpResponse object with the appropriate PDF headers
+        response = HttpResponse(pdf, content_type='application/pdf')
+        # response['Content-Disposition'] = f'attachment; filename="{bill_id}.pdf"'   # This will prompt a download
+
+        return response
     else:
-        p.drawString(276, height - 200, data.engine_oil_quantity + ' Liter')
-
-    p.drawString(180, height - 220, "Grease Type")
-    p.drawString(265, height - 220, ":")
-    p.drawString(276, height - 220, data.grease_company)
-
-    if data.grease_quantity != 'None':
-        p.drawString(180, height - 240, "Grease")
-        p.drawString(265, height - 240, ":")
-        p.drawString(276, height - 240, data.grease_quantity + ' kG')
-
-    if data.grease_quantity == 'None' and data.distilled_water_quantity != 'None':
-        p.drawString(180, height - 240, "Distilled Water")
-        p.drawString(265, height - 240, ":")
-        p.drawString(276, height - 240, data.distilled_water_quantity + ' Liter')
-    else:
-        p.drawString(180, height - 260, "Distilled Water")
-        p.drawString(265, height - 260, ":")
-        p.drawString(276, height - 260,  data.distilled_water_quantity + ' Liter')
-
-    # Signature and Address
-    p.setFont("TimesNewRoman-Bold", 12)
-    p.drawString(100, height - 300, "Transport Incharge")
-    p.drawString(430, height - 300, "GM Admin")
-
-    # Rectangle for the main content
-    p.rect(50, 470, 500, 310)
-
-    # Seal (simulated by drawing an ellipse and text)
-    image_path = "static/images/imag1.jpg"
-    if os.path.isfile(image_path):
-        img = Image.open(image_path)
-        img_reader = ImageReader(img)
-        p.drawImage(img_reader, 340, height - 310, width=70, height=70)  # Adjust the coordinates and size as needed
-
-    # Finalize the PDF
-    p.showPage()
-    p.save()
-
-    # Get the value of the buffer and close it
-    pdf = buffer.getvalue()
-    buffer.close()
-
-    # Create the HttpResponse object with the appropriate PDF headers
-    response = HttpResponse(pdf, content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="{bill_id}.pdf"'   # This will prompt a download
-
-    return response
+        if path is None:
+            return redirect('login')
+        else:
+            return redirect(f'{path}')
 
 
+
+@csrf_exempt
+def qr_scanner(request):
+    if request.method == 'POST':
+        print('--------------------------------- qr scanner working')
+        try:
+            data = json.loads(request.body)
+            qr_data = data.get('qr_data')
+            print('--------------------------------- ',qr_data)
+            rit_pattern = r'RIT\d{9}'
+            hash_pattern = r'[a-f0-9]{64}'
+            # Find all matches
+            rit_match = re.search(rit_pattern, qr_data)
+            hash_match = re.search(hash_pattern, qr_data)
+            # Extract the values if found
+            rit_value = rit_match.group(0) if rit_match else None
+            hash_value = hash_match.group(0) if hash_match else None
+            print("Extracted RIT value:", rit_value)
+            print("Extracted Hash value:", hash_value)
+            db_data = transport_approval.objects.filter(bill_id=rit_value).first()
+            if rit_value is not None and db_data:
+                print('+++',db_data.bill_id)
+                # s_value = f'N.Govindaraju / 2500 K.S Selvaraj / 2369 {db_data.bill_id} {db_data.billed_date}'
+                s_value = f'N.Govindaraju / 2500 Selva Raj / 2369 {db_data.bill_id} {db_data.billed_date}'
+                if hash_function(s_value) == hash_value:
+                    success = True
+                    return JsonResponse({'success': True})
+            else:
+                return JsonResponse({'success': False, 'error_message': 'Invalid QR Code'})
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'error_message': 'Invalid data'})
+    return render(request, 'qr_reader.html')

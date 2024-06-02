@@ -72,6 +72,11 @@ LOGIN_REDIRECT_URL = 'fuel_application'
 LOGOUT_REDIRECT_URL = 'login'
 WSGI_APPLICATION = 'rit_transport.wsgi.application'
 
+# SECURE_SSL_CERTIFICATE = 'localhost.crt'
+# SECURE_SSL_KEY = 'localhost.key'
+
+
+
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases

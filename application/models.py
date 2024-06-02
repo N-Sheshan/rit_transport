@@ -12,7 +12,7 @@ class transport_approval(models.Model):
     Ending_KM = models.FloatField(blank=True,null=True)
     starting_KM = models.FloatField(blank=True,null=True)
     reason=models.CharField(max_length=500,blank=True,null=True)
-    fuel_quantity = models.IntegerField(blank=True,null=True)
+    fuel_quantity = models.FloatField(blank=True,null=True)
     route = models.CharField(max_length=200,blank=True,null=True)
     engine_oil_quantity = models.CharField(max_length=200,blank=True,null=True)
     grease_company = models.CharField(max_length=200,blank=True,null=True)
