@@ -24,6 +24,16 @@ class transport_approval(models.Model):
     proof_date=models.CharField(max_length=500,blank=True,null=True)
     billed_date=models.CharField(max_length=500,blank=True,null=True)
 
+class power_station_approval(models.Model):
+    bill_id=models.CharField(max_length=100,primary_key=True)
+    generater_no = models.CharField(max_length=100,blank=True,null=True)
+    fule_type=models.CharField(max_length=100,blank=True,null=True)
+    buying_date = models.DateField(blank=True,null=True)
+    reason=models.CharField(max_length=500,blank=True,null=True)
+    fuel_quantity = models.FloatField(blank=True,null=True)
+    status = models.CharField(max_length=50,blank=True,null=True)
+    billed_date=models.CharField(max_length=500,blank=True,null=True)
+
 
 
 class Master_Vechicle(models.Model):

@@ -1,5 +1,5 @@
 from django import forms
-from .models import transport_approval,Master_Vechicle,User
+from .models import transport_approval,power_station_approval,Master_Vechicle,User
 
 
 class fuel_bill_detials(forms.ModelForm):
@@ -30,3 +30,9 @@ class loginform(forms.ModelForm):
     class Meta:
         model = User
         fields = ['email','Password']
+
+class ps_fuel_form(forms.ModelForm):
+    class Meta:
+        model = power_station_approval
+        fields = ['generater_no','buying_date','fule_type','reason','fuel_quantity','status']
+        exclude=["billed_date",'bill_id']

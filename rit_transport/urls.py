@@ -25,10 +25,12 @@ urlpatterns = [
     path('logout', views.logout_view, name="logout"),
     # path('register/', views.register, name='register'),
     path('fuel_application/', views.fuel_application, name="fuel_application"),
+    path('fuel_application_PS/', views.fuel_application_PS, name="fuel_application_PS"),
     path('data_update', views.data_update, name="data_update"),
     path('history', views.history, name="history"),
+    path('ps_history', views.ps_history, name="ps_history"),
     path('new_vechical', views.new_vechical, name="new_vechical"),
-    path('generate_pdf/<path:bill_id>/',views.generate_pdf, name='generate_pdf'),
+    path('generate_pdf/<path:f_type>/<path:bill_id>',views.generate_pdf, name='generate_pdf'),
     path('get_bills/<str:vehicle_no>/', views.get_bills_for_vehicle, name='get_bills'),
     path('scan/', views.qr_scanner, name='qr_scanner'),
 

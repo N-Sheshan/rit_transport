@@ -34,6 +34,7 @@
   <p class="text-gray font-weight-bold text-uppercase px-3 small pb-4 mb-0">Dashboard</p>
 
   <ul class="nav flex-column bg-white mb-0">
+    {% if user == '953621243053@ritrjpm.ac.in' %}
     <li class="nav-item">
       <a href="{% url 'fuel_application' %}" class="nav-link text-dark bg-light">
                 <i class="fa fa-th-large mr-3 text-primary fa-fw"></i>
@@ -46,25 +47,48 @@
                 data update
             </a>
     </li>
-   
-    <li class="nav-item">
-      <a href="{% url 'history' %}"  class="nav-link text-dark">
-                <i class="fa fa-solid fa-table mr-3 text-primary fa-fw"></i>
-                History
-            </a>
-    </li>
+    
     <li class="nav-item">
       <a href="{% url 'new_vechical' %}"  class="nav-link text-dark">
-                <i class="fa fa-solid fa-table mr-3 text-primary fa-fw"></i>
+                <i class="fa fa-solid fa-bus mr-3 text-primary fa-fw"></i>
                 Add New Vechical
             </a>
     </li>
+    {% endif %}
+    {% if user == '953621243053@ritrjpm.ac.in' or user == 'gm@ritrjpm.ac.in' %}
+    <li class="nav-item">
+      <a href="{% url 'history' %}"  class="nav-link text-dark">
+                <i class="fa fa-solid fa-area-chart  mr-3 text-primary fa-fw"></i>
+               Transport History
+            </a>
+    </li>
+    {% endif %}
+     {% if user == 'ayyachamy@ritrjpm.ac.in'  %}
+    <li class="nav-item">
+      <a href="{% url 'fuel_application_PS' %}"  class="nav-link text-dark">
+                <i class="fa fa-solid fa-plug  mr-3 text-primary fa-fw"></i>
+               Power Station Form
+            </a>
+    </li>
+    {% endif %}
+    {% if user == 'ayyachamy@ritrjpm.ac.in' or user == 'gm@ritrjpm.ac.in' %}
+    <li class="nav-item">
+      <a href="{% url 'ps_history' %}"  class="nav-link text-dark">
+                <i class="fa fa-solid fa-line-chart  mr-3 text-primary fa-fw"></i>
+               Power Station History
+            </a>
+    </li>
+    {% endif %}
+   
+    
+    {% if user == 'ayyachamy@ritrjpm.ac.in' or user == 'gm@ritrjpm.ac.in' or user == '953621243053@ritrjpm.ac.in' %}
     <li class="nav-item">
       <a href="{% url 'qr_scanner' %}"  class="nav-link text-dark">
-                <i class="fa fa-solid fa-table mr-3 text-primary fa-fw"></i>
+                <i class="fa fa-solid fa-qrcode mr-3 text-primary fa-fw"></i>
                 qr code reader
             </a>
     </li>
+    {% endif %}
     <br><br><br>
     <li class="nav-item">
       

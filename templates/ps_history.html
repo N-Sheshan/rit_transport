@@ -49,9 +49,10 @@
                                         <label for="vehicle_no">Vehicle NO</label>
                                         <select required name="vehicle_no" id="vehicle_no" multiple multiselect-search="true" multiselect-select-all="true" multiselect-max-items="3" 
                                             onchange="console.log(this.selectedOptions)" style="position: relative; z-index: 10;" >
-                                            {% for c in vechical %}
-                                            <option value="{{ c.vehicle_no }}">{{ c.vehicle_no }}</option>
-                                            {% endfor %}
+                                            
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                    
                                         </select>
                                     </div>
                                     <div class="availability-input-field">
@@ -94,32 +95,20 @@
                                     {% if individual %}
                                     <tr>
                                         <th>Bill ID</th>
-                                        <th>Vehicle No</th>
-                                        <th>Driver ID</th>
-                                        <th>Vehicle Type</th>
+                                        <th>Generater No</th>
                                         <th>Fuel Type</th>
                                         <th>Buying Date</th>
                                         <th>Reason</th>
                                         <th>Fuel Quantity</th>
-                                        <th>Route</th>
-                                        <th>Starting KM</th>
-                                        <th>Ending KM</th>
-                                        <th>Mileage</th>
                                         <th>Fuel Respect</th>
                                     </tr>
                                     {% endif %}
                                     {% if cumulative %}
-                                    <tr>
-                                        <th>Vehicle No</th>
-                                        <th>Vehicle Type</th>
+                                    
+                                    <th>Generater No</th>
                                         <th>Fuel Type</th>
-                                        <th>Route</th>
                                         <th>Total Fuel</th>
-                                        <th>Starting KM</th>
-                                        <th>Ending KM</th>
-                                        <th>Total KM</th>
-                                        <th>Average Mileage</th>
-                                    </tr>
+                                    </tr> 
                                     {% endif %}
                                 </thead>
                                 <tbody>
@@ -127,37 +116,24 @@
                                     {% for item in data %}
                                     <tr>
                                         <td>{{ item.bill_id }}</td>
-                                        <td>{{ item.vehicle_no }}</td>
-                                        <td>{{ item.driver_id }}</td>
-                                        <td>{{ item.vehicle_type }}</td>
+                                        <td>{{ item.generater_no }}</td>
                                         <td>{{ item.fule_type }}</td>
                                         <td>{{ item.buying_date }}</td>
                                         <td>{{ item.reason }}</td>
                                         <td>{{ item.fuel_quantity }}</td>
-                                        <td>{{ item.route }}</td>
-                                        <td>{{ item.starting_KM }}</td>
-                                        <td>{{ item.Ending_KM }}</td>
-                                        <td>{{ item.Mileage }}</td>
-                                        {% if item.Ending_KM != None %}
-                                        <td> <a  href="{% url 'generate_pdf' f_type='transport' bill_id=item.bill_id %}">Generate PDF</a></td>{% endif %}
-                                        {% if item.Ending_KM == None %}
-                                        <td>Completed</td>{% endif %}
-
+                                        <td> <a  href="{% url 'generate_pdf' f_type='power_station' bill_id=item.bill_id %}">Generate PDF</a></td>
+                                  
                                     </tr>
                                     {% endfor %}
                                     {% endif %}
                                     {% if cumulative %}
                                     {% for item in data %}
                                     <tr>
-                                        <td>{{ item.additional_data.0 }}</td>  <!-- vehicle_no -->
-                                        <td>{{ item.additional_data.1 }}</td>  <!-- vehicle_type -->
-                                        <td>{{ item.additional_data.2 }}</td>  <!-- fuel_type -->
-                                        <td>{{ item.additional_data.3 }}</td> 
+                                        <td>{{ item.additional_data.0 }}</td>  
+                                        <td>{{ item.additional_data.1 }}</td> 
+                                        
                                         <td>{{ item.total_fuel }}</td>
-                                        <td>{{ item.start_km }}</td>
-                                        <td>{{ item.end_km }}</td>
-                                        <td>{{ item.total_km }}</td>
-                                        <td>{{ item.average_mileage }}</td>
+                                        
                                     </tr>
                                     {% endfor %}
                                     {% endif %}

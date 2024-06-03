@@ -27,6 +27,7 @@ SECRET_KEY = 'django-insecure-*ufe^5h_yx&##*9t14-tg_z-xrdb8w3^@%-zqxbve2knbl7ok&
 DEBUG = True
 
 ALLOWED_HOSTS = ['172.16.71.2']
+# ALLOWED_HOSTS = ['127.0.0.1']
 
 WKHTMLTOPDF_CMD = '/path/to/wkhtmltopdf'
 # Application definition

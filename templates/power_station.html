@@ -29,82 +29,43 @@
   <div class="container">
     <header>Registration</header>
 
-    <form method="POST" action="{% url 'fuel_application' %}" autocomplete="off" enctype="multipart/form-data">
+    <form method="POST" action="{% url 'fuel_application_PS' %}" autocomplete="off" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="form first">
             <div class="details personal">
                 <span class="title">Billing Details</span>
                 <div class="fields">
                     <div class="input-field">
-                        <label>Vehicle NO</label>
-                        <select name="vehicle_no" required>
-                            <option value="" selected hidden>Select vehicle NO</option>
-                            {% for c in vechical %}
-                            <option value="{{ c.vehicle_no }}">{{ c.vehicle_no }}</option>
-                            {% endfor %}
+                        <label>Generater No</label>
+                        <select name="generater_no" required>
+                            <option value="" selected hidden>Select Generater NO</option>
+                            <option value="1" >1</option>
+                            <option value="2" >2</option>
+                           
                         </select>
-                    </div>
-    
-                    <div class="input-field">
-                        <label>Driver ID</label>
-                        <input type="text" id="driver_id" name="driver_id" placeholder="Enter Driver id" required>
-                    </div>
-    
+                    </div>    
                     <div class="input-field">
                         <label>Date</label>
-                        <input type="date" id="" name="buying_date" placeholder="Enter Date" min="" required>
+                        <input type="date" id="fromdate" name="buying_date" placeholder="Enter Date" min="" required>
                     </div>
-    
                     <div class="input-field">
-                        <label>Engine Oil Quantity</label>
-                        <input type="text" name="engine_oil_quantity" id="engine_oil_quantity" placeholder="Enter Grease Quantity" required>
-                        <!-- <select name="engine_oil_quantity" required>
-                            <option value="" selected hidden>Select Engine Oil Quantity</option>
-                            <option value="None">None</option>
-                            {% for c in "x"|rjust:"10" %}
-                            <option value="{{ forloop.counter }}">{{ forloop.counter }}</option>
-                            {% endfor %}
-                        </select> -->
-                    </div>
-    
-                    <div class="input-field">
-                        <label>Grease Type</label>
-                        <select name="grease_company" id="greaseCompany" required>
-                            <option value="" selected hidden>Select Grease Type</option>
-                            <option value="None">None</option> 
-                            <option value="LLB">LLB</option>
-                            <option value="MP3">MP3</option>
+                        <label>Fuel Type</label>
+                        <select name="fule_type" id="fule_type" required>
+                            <option value="" selected hidden>Select Fuel Type</option>
+                            <option value="Diesel">Diesel</option> 
+                            <option value="petrol">petrol</option>
                         </select>
                     </div>
-                    <div  class="input-field" id="greaseQuantityField" style="display: none;">
-                    <div  > 
-                        <label>Grease Quantity</label>
-                        <input type="text" name="grease_quantity" id="greaseQuantity" placeholder="Enter Grease Quantity" required>
-                        <!-- <select name="grease_quantity" id="greaseQuantity"> 
-                            <option value="None">None</option>
-                            {% for c in "x"|rjust:"50" %}
-                            <option value="{{ forloop.counter }}">{{ forloop.counter }}</option>
-                            {% endfor %}
-                        </select> -->
-                    </div></div>
     
                     <div class="input-field">
-                        <label>Distilled Water</label>
-                        <input type="text" name="distilled_water_quantity" placeholder="Enter Distilled Water" required>
-                        <!-- <select name="distilled_water_quantity" required>
-                            <option value="" selected hidden>Select Distilled Water</option>
-                            <option value="None">None</option>
-                            {% for c in "x"|rjust:"10" %}
-                            <option value="{{ forloop.counter }}">{{ forloop.counter }}</option>
-                            {% endfor %}
-                        </select> -->
+                        <label>Fuel Quantity</label>
+                        <input type="text" name="fuel_quantity" id="fuel_quantity" placeholder="Enter Fuel Quantity" required>
                     </div>
     
                     <div class="input-field">
                         <label>Reason</label>
                         <input type="text" name="reason" placeholder="Enter Reason" required>
                     </div>
-    
                     <div class="input-field">
                         <label>Approval</label>
                         <select name="status" required>
@@ -116,7 +77,7 @@
                 </div>
     
                 <button type="submit" class="nextBtn">
-                    <span class="btnText">Bill It</span>
+                    <span class="btnText">Generate Receipt</span>
                     <i class="uil uil-navigator"></i>
                 </button>
             </div>
@@ -129,7 +90,7 @@
 <div id="popup" class="popup">
   <h2>Thank You!</h2>
   <p>{{ success }}</p>
-  <a href="{% url 'generate_pdf'  f_type='transport' bill_id=bill_id %}" style="color: white;"><button id="close-btn">Generate pdf</button></a>
+  <a href="{% url 'generate_pdf'  f_type='power_station' bill_id=bill_id %}" style="color: white;"><button id="close-btn">Generate pdf</button></a>
 </div>
 {% endif %}
 
@@ -180,20 +141,7 @@
     }
   });
 </script>
-<script>
-    const greaseCompanySelect = document.getElementById('greaseCompany');
-    const greaseQuantityField = document.getElementById('greaseQuantityField');
-    const greaseQuantitySelect = document.getElementById('greaseQuantity');
 
-    greaseCompanySelect.addEventListener('change', () => {
-        if (greaseCompanySelect.value !== 'None') {
-            greaseQuantityField.style.display = 'block'; 
-        } else {
-            greaseQuantityField.style.display = 'none'; 
-            greaseQuantitySelect.value = 'None';
-        }
-    });
-</script>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
