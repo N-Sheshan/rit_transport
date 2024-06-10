@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <title>Bootstrap 4 Sidebar Menu Responsive with Sub menu  Create Responsive Side Navigation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{% static 'css/samplefromstyle.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <!-- <link rel="stylesheet" href="{% static 'css/popup.css' %}"> -->
+</head>
+<body>
+ 
+  {% block maincontent %}
+
+
+<!-- Page content holder -->
+<div class="page-content p-5" id="content">
+  <!-- Toggle button -->
+  <div class="sidebarCollapse">
+  <button id="sidebarCollapse" type="button" class="btn btn-light  rounded-pill shadow-sm px-4 "><i  class="fa fa-bars mr-2 toggleicon"></i><small class="text-uppercase font-weight-bold">Menu</small></button>
+</div>
+  <!-- Demo content -->
+  <h2 class="display-5 " style="margin-bottom: .9rem;">Data Uploading</h2>
+
+  <div class="row ">
+  <div class="container">
+    <header>Uploading Form</header>
+    <form method="POST" action="{% url 'data_update' %}" autocomplete="off" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="form first">
+          <div class="details personal">
+              <div class="fields">
+                  <div class="availability-input-field">
+                      <label>Vehicle NO</label>
+                      <select id="vehicle_no" name="vehicle_no" required> 
+                          <option value="" selected hidden>Select Vehicle NO</option>
+                          {% for c in vechical %}
+                              <option value="{{ c.vehicle_no }}">{{ c.vehicle_no }}</option>
+                          {% endfor %}
+                      </select>
+                  </div>
+  
+                  <div class="availability-input-field">
+                      <label>Bill ID</label>
+                      <select id="bill_id" name="bill_id" required>
+                          <option value="" selected hidden>Select Bill ID</option> 
+                      </select>
+                  </div>
+  
+                  <div class="availability-input-field">
+                      <label>Fuel Quantity</label>
+                      <input type="number" name="fuel_quantity" step="0.001" placeholder="Enter Fuel Amount" required>
+                  </div>
+                  <div class="availability-input-field">
+                      <label>Overall KM</label>
+                      <input name="Ending_KM" type="number" step="0.001" placeholder="Enter overall_km" required>
+                  </div>
+              </div>
+          </div>
+  
+          <div class="details ID">
+              <button type="submit" class="nextBtn">
+                  <span class="btnText">Upload</span>
+                  <i class="uil uil-navigator"></i>
+              </button>
+          </div>
+      </div>
+  </form>
+   
+</div>
+</div>
+</div>
+{% if success %}
+<div id="popup" class="popup">
+  <h2>Success!</h2>
+  <p>{{ success }}</p>
+  <button id="close-btn">OK</button>
+</div>
+{% endif %}
+
+{% if error_message %}
+<div id="popup" class="popup">
+  <h2>Error</h2>
+  <p>{{ error_message }}</p>
+  <button id="close-btn">OK</button>
+</div>
+{% endif %}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const popup = document.getElementById('popup');
+    const closeBtn = document.getElementById('close-btn');
+
+    if (popup) {
+      popup.style.display = 'block';
+      closeBtn.addEventListener('click', function() {
+        popup.style.display = 'none';
+      });
+    }
+  });
+</script>->
+
+<script>
+  const vehicleSelect = document.getElementById('vehicle_no');
+  const billIdSelect = document.getElementById('bill_id');
+
+  vehicleSelect.addEventListener('change', function() {
+      const vehicleNo = this.value;
+      billIdSelect.innerHTML = '<option value="" selected hidden>Loading...</option>'; // Clear and show loading
+
+      if (vehicleNo) {
+          fetch(`/get_bills/${vehicleNo}/`) // Adjust the URL pattern if needed
+              .then(response => response.json())
+              .then(data => {
+                  billIdSelect.innerHTML = '<option value="" selected hidden>Select Bill ID</option>';
+                  data.bills.forEach(billId => {
+                      billIdSelect.innerHTML += `<option value="${billId}">${billId}</option>`;
+                  });
+              })
+              .catch(error => {
+                  console.error('Error fetching bill IDs:', error);
+                  billIdSelect.innerHTML = '<option value="" selected hidden>Error loading bills</option>';
+              });
+      } else {
+          billIdSelect.innerHTML = '<option value="" selected hidden>Select Bill ID</option>'; // Reset if no vehicle selected
+      }
+  });
+</script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<script src="{% static '/js/script.js' %}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const fileInput = document.getElementById('file');
+    const fileUploadLabel = document.getElementById('fileUploadLabel');
+    const filenameDisplay = document.getElementById('filename');
+
+    fileInput.addEventListener('change', function() {
+      if (fileInput.files.length > 0) {
+        filenameDisplay.textContent = 'Selected file: ' + fileInput.files[0].name;
+      } else {
+        filenameDisplay.textContent = '';
+      }
+    });
+  });
+
+  // const section = document.querySelector("section"),
+  //   overlay = document.querySelector(".overlay"),
+  //   closeBtn = document.querySelector(".close-btn");
+
+  // overlay.addEventListener("click", () => section.classList.remove("active"));
+  // closeBtn.addEventListener("click", () => section.classList.remove("active"));
+
+
+ </script>
+{% endblock %}
+</body>
+</html>
+
+

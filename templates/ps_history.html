@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+<!doctype html>
+<html lang="en">
+    {% load static %}
+    {% block maincontent %}
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Bootstrap 5 CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+
+        <title>Multiselect-dropdown demo!</title>
+
+        <style>
+            select {
+                width: 20em;
+                width: 20vw;
+                padding: 7.5px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="page-content p-5" id="content">
+            <div class="sidebarCollapse">
+                <button id="sidebarCollapse" type="button" class="btn btn-light rounded-pill shadow-sm px-4 ">
+                    <i class="fa fa-bars mr-2 toggleicon"></i><small class="text-uppercase font-weight-bold">Menu</small>
+                </button>
+            </div>
+            <h2 class="display-5" style="margin-bottom: .9rem;">History Table</h2>
+            <div class="row">
+                <div class="container table_container">
+                    <header>Filtering Form</header>
+                    <form method="POST" autocomplete="off" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form first">
+                            <div class="details personal">
+                                <div class="fields">
+                                    <div class="availability-input-field">
+                                        <label>From Date</label>
+                                        <input type="date" id="from-date" name="from_date" placeholder="Enter From date" min="" required>
+                                    </div>
+                                    <div class="availability-input-field">
+                                        <label>To Date</label>
+                                        <input type="date" id="to-date" name="to_date" placeholder="Enter TO date" min="" required>
+                                    </div>
+                                    <div class="availability-input-field" style="position: relative;">
+                                        <label for="vehicle_no">Generater No</label>
+                                        <select required name="vehicle_no" id="vehicle_no" multiple multiselect-search="true" multiselect-select-all="true" multiselect-max-items="3" 
+                                            onchange="console.log(this.selectedOptions)" style="position: relative; z-index: 10;" >
+                                            
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                    
+                                        </select>
+                                    </div>
+                                    <div class="availability-input-field">
+                                        <label>Format</label>
+                                        <select name="data_formate" id="data_formate" required>
+                                            <option value="" selected hidden>Select Format</option>
+                                            <option value="individual">individual</option> 
+                                            <option value="cumulative">cumulative</option>
+                                        </select>
+                                    </div>
+                            </div>
+                            <div class="details ID">
+                                <button type="submit" class="nextBtn">
+                                    <span class="btnText">Filter</span>
+                                    <i class="uil uil-navigator"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+        
+                    <main class="table" id="customers_table">
+                        <section class="table__header">
+                            <div class="input-group">
+                                <input type="text" placeholder="Search Data...">
+                                <img src="{% static 'images/search.png' %}" alt="">
+                            </div>
+                            <div class="export__file">
+                                <label for="export-file" class="export__file-btn" title="Export File"></label>
+                                <input type="checkbox" id="export-file">
+                                <div class="export__file-options" style="z-index: 2000;">
+                                    <label>Export As &nbsp; &#10140;</label>
+                                    <label for="export-file" class="btn btn-primary" style="color: black;" id="exportPdf">PDF <img src="{% static 'images/pdf.png' %}" alt=""></label>
+                                    <label for="export-file" class="btn btn-primary" style="color: black;" id="exportExcel">EXCEL <img src="{% static 'images/excel.png' %}" alt=""></label>
+                                </div>
+                            </div>
+                        </section>
+                        <section class="table__body">
+                            <table id="example" class="display nowrap" style="width:100%">
+                                <thead>
+                                    {% if individual %}
+                                    <tr>
+                                        <th>Bill ID</th>
+                                        <th>Generater No</th>
+                                        <th>Fuel Type</th>
+                                        <th>Buying Date</th>
+                                        <th>Reason</th>
+                                        <th>Fuel Quantity</th>
+                                        <th>Fuel Respect</th>
+                                    </tr>
+                                    {% endif %}
+                                    {% if cumulative %}
+                                    
+                                    <th>Generater No</th>
+                                        <th>Fuel Type</th>
+                                        <th>Total Fuel</th>
+                                    </tr> 
+                                    {% endif %}
+                                </thead>
+                                <tbody>
+                                    {% if individual %}
+                                    {% for item in data %}
+                                    <tr>
+                                        <td>{{ item.bill_id }}</td>
+                                        <td>{{ item.generater_no }}</td>
+                                        <td>{{ item.fule_type }}</td>
+                                        <td>{{ item.buying_date }}</td>
+                                        <td>{{ item.reason }}</td>
+                                        <td>{{ item.fuel_quantity }}</td>
+                                        <td> <a  href="{% url 'generate_pdf' f_type='power_station' bill_id=item.bill_id %}">Generate PDF</a></td>
+                                  
+                                    </tr>
+                                    {% endfor %}
+                                    {% endif %}
+                                    {% if cumulative %}
+                                    {% for item in data %}
+                                    <tr>
+                                        <td>{{ item.additional_data.0 }}</td>  
+                                        <td>{{ item.additional_data.1 }}</td> 
+                                        
+                                        <td>{{ item.total_fuel }}</td>
+                                        
+                                    </tr>
+                                    {% endfor %}
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </section>
+                    </main>
+                </div>
+            </div>
+        </div>
+
+        <!-- Include necessary JavaScript libraries -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
+        <script src="{% static 'JS/multiselect-dropdown.js' %}"></script>
+
+        <script>
+         const fromDateInput = document.getElementById('from-date');
+const toDateInput = document.getElementById('to-date');
+
+// Add event listener to "From Date" input field
+fromDateInput.addEventListener('change', function() {
+    // Parse selected date strings into Date objects
+    const fromDate = new Date(this.value);
+    const toDate = new Date(toDateInput.value);
+
+    // Check if the selected "From Date" is greater than the current "To Date"
+    if (fromDate > toDate) {
+        // If so, set the "To Date" value to the selected "From Date"
+        toDateInput.value = this.value;
+    }
+    
+    // Update the min attribute of "To Date" input field
+    toDateInput.min = this.value;
+});
+
+                // Export table to Excel
+                document.getElementById('exportExcel').addEventListener('click', function() {
+                    var wb = XLSX.utils.table_to_book(document.getElementById('example'), { sheet: "Sheet JS" });
+                    XLSX.writeFile(wb, 'TableData.xlsx');
+                });
+
+                // Export table to PDF
+                document.getElementById('exportPdf').addEventListener('click', function() {
+                    var { jsPDF } = window.jspdf;
+                    var doc = new jsPDF('p', 'pt', 'a4');
+                    doc.autoTable({ html: '#example' });
+                    doc.save('TableData.pdf');
+                });
+           
+        </script>
+    </body>
+    {% endblock %}
+</html>
