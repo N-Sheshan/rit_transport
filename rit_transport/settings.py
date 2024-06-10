@@ -26,7 +26,12 @@ SECRET_KEY = 'django-insecure-*ufe^5h_yx&##*9t14-tg_z-xrdb8w3^@%-zqxbve2knbl7ok&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+<<<<<<< HEAD
 # ALLOWED_HOSTS = ['172.16.16.71']
+=======
+ALLOWED_HOSTS = ['172.16.71.2']
+# ALLOWED_HOSTS = ['127.0.0.1']
+>>>>>>> new-origin/main
 
 WKHTMLTOPDF_CMD = '/path/to/wkhtmltopdf'
 # Application definition
@@ -72,6 +77,14 @@ LOGIN_REDIRECT_URL = 'fuel_application'
 LOGOUT_REDIRECT_URL = 'login'
 WSGI_APPLICATION = 'rit_transport.wsgi.application'
 
+<<<<<<< HEAD
+=======
+# SECURE_SSL_CERTIFICATE = 'localhost.crt'
+# SECURE_SSL_KEY = 'localhost.key'
+
+
+
+>>>>>>> new-origin/main
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
@@ -83,8 +96,11 @@ DATABASES = {
         'PASSWORD': '',
         'HOST': '127.0.0.1',
         'PORT': '3306',
+<<<<<<< HEAD
         
 
+=======
+>>>>>>> new-origin/main
     }
 }
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'

@@ -27,6 +27,7 @@
 <div class="container container-login" style="margin-top: 100px;margin-top: 100px; font-size:larger;">
    
     <div class="row justify-content-center">
+<<<<<<< HEAD
         {% if error_message %}
         <div>
             {{ error_message }}
@@ -37,13 +38,19 @@
         </div>
         {% endif %}
         {% if success %}
+=======
+    
+>>>>>>> new-origin/main
         <form method="post" action="{% url 'signup' %}" autocomplete="off"  enctype="multipart/form-data">
             {% csrf_token %}
             <div class="form-all">
                 <div class="admission">
                     <br><br><br><br>
                     <div class="row">
+<<<<<<< HEAD
                         
+=======
+>>>>>>> new-origin/main
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="Name">Name</label>
@@ -77,13 +84,34 @@
                 <button type="submit" class="btn btn-primary">Register</button>
             </div>
         </form>
+<<<<<<< HEAD
         {% endif %}
+=======
+>>>>>>> new-origin/main
       </div>
    
   </div>
 </div>
 
+<<<<<<< HEAD
 
+=======
+<!-- {% if success %}
+<div id="popup" class="popup">
+  <h2>Thank You!</h2>
+  <p>{{ success }}</p>
+  <a href="{% url 'generate_pdf' bill_id %}" style="color: white;"><button id="close-btn">Generate pdf</button></a>
+</div>
+{% endif %}
+
+{% if error_message %}
+<div id="popup" class="popup">
+  <h2>Error</h2>
+  <p>{{ error_message }}</p>
+  <button id="close-btn">OK</button>
+</div>
+{% endif %} -->
+>>>>>>> new-origin/main
 <script>
    // Get the "Bill It" button
     

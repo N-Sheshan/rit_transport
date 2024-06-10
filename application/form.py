@@ -1,5 +1,7 @@
 from django import forms
-from .models import transport_approval,Master_Vechicle,User,power_station_approval
+
+from .models import transport_approval,power_station_approval,Master_Vechicle,User
+
 
 
 class fuel_bill_detials(forms.ModelForm):

@@ -52,7 +52,11 @@
     
                     <div class="input-field">
                         <label>Date</label>
+<<<<<<< HEAD
                         <input type="date" id="fromdate" name="buying_date" placeholder="Enter Date" min="" required>
+=======
+                        <input type="date" id="" name="buying_date" placeholder="Enter Date" min="" required>
+>>>>>>> new-origin/main
                     </div>
     
                     <div class="input-field">
@@ -116,7 +120,11 @@
                 </div>
     
                 <button type="submit" class="nextBtn">
+<<<<<<< HEAD
                     <span class="btnText">Generate Receipt</span>
+=======
+                    <span class="btnText">Bill It</span>
+>>>>>>> new-origin/main
                     <i class="uil uil-navigator"></i>
                 </button>
             </div>
@@ -129,7 +137,11 @@
 <div id="popup" class="popup">
   <h2>Thank You!</h2>
   <p>{{ success }}</p>
+<<<<<<< HEAD
   <a href="{% url 'generate_pdf' f_type='transport' bill_id=bill_id %}" style="color: white;"><button id="close-btn">Generate pdf</button></a>
+=======
+  <a href="{% url 'generate_pdf'  f_type='transport' bill_id=bill_id %}" style="color: white;"><button id="close-btn">Generate pdf</button></a>
+>>>>>>> new-origin/main
 </div>
 {% endif %}
 

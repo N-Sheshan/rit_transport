@@ -34,7 +34,11 @@
   <p class="text-gray font-weight-bold text-uppercase px-3 small pb-4 mb-0">Dashboard</p>
 
   <ul class="nav flex-column bg-white mb-0">
+<<<<<<< HEAD
     {% if user == 'transport@ritrjpm.ac.in' or user == 'ayyachamy@ritrjpm.ac.in' %}
+=======
+    {% if user == '953621243053@ritrjpm.ac.in' %}
+>>>>>>> new-origin/main
     <li class="nav-item">
       <a href="{% url 'fuel_application' %}" class="nav-link text-dark bg-light">
                 <i class="fa fa-th-large mr-3 text-primary fa-fw"></i>
@@ -55,7 +59,11 @@
             </a>
     </li>
     {% endif %}
+<<<<<<< HEAD
     {% if user == 'transport@ritrjpm.ac.in' or user == 'ayyachamy@ritrjpm.ac.in' or user == 'gm@ritrjpm.ac.in' %}
+=======
+    {% if user == '953621243053@ritrjpm.ac.in' or user == 'gm@ritrjpm.ac.in' %}
+>>>>>>> new-origin/main
     <li class="nav-item">
       <a href="{% url 'history' %}"  class="nav-link text-dark">
                 <i class="fa fa-solid fa-area-chart  mr-3 text-primary fa-fw"></i>
@@ -63,6 +71,7 @@
             </a>
     </li>
     {% endif %}
+<<<<<<< HEAD
      {% if user == 'ayyachamy@ritrjpm.ac.in' or user == 'powerhouse@ritrjpm.ac.in'  %}
     <li class="nav-item">
       <a href="{% url 'fuel_application_PS' %}"  class="nav-link text-dark">
@@ -76,12 +85,31 @@
       <a href="{% url 'ps_history' %}"  class="nav-link text-dark">
                 <i class="fa fa-solid fa-line-chart  mr-3 text-primary fa-fw"></i>
                 Power House Generator Fuel History
+=======
+     {% if user == 'ayyachamy@ritrjpm.ac.in'  %}
+    <li class="nav-item">
+      <a href="{% url 'fuel_application_PS' %}"  class="nav-link text-dark">
+                <i class="fa fa-solid fa-plug  mr-3 text-primary fa-fw"></i>
+               Power Station Form
+            </a>
+    </li>
+    {% endif %}
+    {% if user == 'ayyachamy@ritrjpm.ac.in' or user == 'gm@ritrjpm.ac.in' %}
+    <li class="nav-item">
+      <a href="{% url 'ps_history' %}"  class="nav-link text-dark">
+                <i class="fa fa-solid fa-line-chart  mr-3 text-primary fa-fw"></i>
+               Power Station History
+>>>>>>> new-origin/main
             </a>
     </li>
     {% endif %}
    
     
+<<<<<<< HEAD
     {% if user == 'ayyachamy@ritrjpm.ac.in' or user == 'powerhouse@ritrjpm.ac.in' or user == 'gm@ritrjpm.ac.in' or user == 'transport@ritrjpm.ac.in' %}
+=======
+    {% if user == 'ayyachamy@ritrjpm.ac.in' or user == 'gm@ritrjpm.ac.in' or user == '953621243053@ritrjpm.ac.in' %}
+>>>>>>> new-origin/main
     <li class="nav-item">
       <a href="{% url 'qr_scanner' %}"  class="nav-link text-dark">
                 <i class="fa fa-solid fa-qrcode mr-3 text-primary fa-fw"></i>

@@ -54,7 +54,11 @@ class User(models.Model):
     user_name = models.CharField(max_length=100)
     email = models.CharField(max_length=100)
     Password = models.CharField(max_length=100)
+<<<<<<< HEAD
     conform_Password = models.CharField(max_length=100)
 
 class defalut_email_id(models.Model):
     email_id = models.CharField(max_length=100)
+=======
+    conform_Password = models.CharField(max_length=100)
+>>>>>>> new-origin/main

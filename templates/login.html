@@ -34,7 +34,11 @@
           {{ error_message }}
 
           <div class="form-group">
+<<<<<<< HEAD
             <label for="username">Email id</label>
+=======
+            <label for="username">username</label>
+>>>>>>> new-origin/main
             <input type="text" class="form-control" id="email" name="email" placeholder="Enter your username" required>
           </div>
           <div class="form-group">
@@ -49,7 +53,25 @@
   </div>
 </div>
 
+<<<<<<< HEAD
 
+=======
+<!-- {% if success %}
+<div id="popup" class="popup">
+  <h2>Thank You!</h2>
+  <p>{{ success }}</p>
+  <a href="{% url 'generate_pdf' bill_id %}" style="color: white;"><button id="close-btn">Generate pdf</button></a>
+</div>
+{% endif %}
+
+{% if error_message %}
+<div id="popup" class="popup">
+  <h2>Error</h2>
+  <p>{{ error_message }}</p>
+  <button id="close-btn">OK</button>
+</div>
+{% endif %} -->
+>>>>>>> new-origin/main
 <script>
    // Get the "Bill It" button
     
